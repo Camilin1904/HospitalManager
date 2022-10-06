@@ -1,11 +1,9 @@
-public interface HashTable <T> {
-    public void insert(String key, T value);
+public interface HashTable <T, K> {
+    public void insert(K key, T value);
 
-    public void addLast(NodeHash<T> input, int i);
+    public void addLast(NodeHash<T,K> input, int i);
 
-    public NodeHash<T> search(String key);
+    public T search(K key);
 
-    public void delete(String key);
-    
-    public void delete(NodeHash<T> current, int goal,NodeHash<T> head);
+    public void delete(K key);
 }

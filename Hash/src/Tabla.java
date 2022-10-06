@@ -1,29 +1,28 @@
-public class Tabla<V> {
-    private NodeHash<V>[] arr;
+import java.security.Key;
+
+@SuppressWarnings("unchecked")
+public class Tabla<V,K> implements HashTable<V,K>{
+    private NodeHash<V,K>[] arr;
 
     public Tabla() {
         arr= new NodeHash[10];
     }
 
-    public void insert(String key, V value){
+    public void insert(K key, V value){
 
-        int keyy=0;
-        for(int i=0; i<key.length(); i++){
-            keyy+=((int)key.charAt(i))*(i+1);
-        }
-        int j=keyy;
+        int keyy=key.hashCode();
         keyy%=10;
-        NodeHash<V> add= new NodeHash<>(j,value);
+        NodeHash<V,K> add= new NodeHash<>(key,value);
         addLast(add,keyy);
     }
 
-    public void addLast(NodeHash<V> input, int i){
+    public void addLast(NodeHash<V,K> input, int i){
         if(arr[i] == null){
             arr[i] = input;
             arr[i].setNext(input);
             arr[i].setPrevious(input);
         }else{
-            NodeHash<V> tail = arr[i].getPrevious();
+            NodeHash<V,K> tail = arr[i].getPrevious();
             //Los enlaces next
             tail.setNext(input);
             input.setNext(arr[i]);
@@ -34,18 +33,15 @@ public class Tabla<V> {
         }
     }
 
-    public NodeHash<V> search(String key){
-        int keyy=0;
-        for(int i=0; i<key.length(); i++){
-            keyy+=((int)key.charAt(i))*(i+1);
-        }
-        int j=keyy;
+    public V search(K key){
+        int keyy=key.hashCode();
         keyy%=10;
-
-        return search(j,arr[keyy],keyy);
+        NodeHash<V,K> u = search(key,arr[keyy],keyy);
+        if (u!=null)return (u.getValue());
+        else return null;
     }
 
-    private NodeHash<V> search(int key,NodeHash<V> a,int first){
+    private NodeHash<V,K> search(K key,NodeHash<V,K> a,int first){
 
 
         if(a==null){
@@ -67,28 +63,24 @@ public class Tabla<V> {
         return null;
     }
 
-    public void delete(String key) {
-        int keyy=0;
-        for(int i=0; i<key.length(); i++){
-            keyy+=((int)key.charAt(i))*(i+1);
-        }
-        int j=keyy;
+    public void delete(K key) {
+        int keyy=hashCode();
         keyy%=10;
-        delete(arr[keyy], j,arr[keyy]);
+        delete(arr[keyy], key,arr[keyy]);
     }
 
     //Eliminar un nodo por su ID
-    public void delete(NodeHash<V> current, int goal,NodeHash<V> head) {
+    public void delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
         if (goal == head.getKey()) {
-            NodeHash<V> prev = current.getPrevious();
-            NodeHash<V> next = current.getNext();
+            NodeHash<V,K> prev = current.getPrevious();
+            NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
             head = next;
         }
         if(current.getKey() == goal){
-            NodeHash<V> prev = current.getPrevious();
-            NodeHash<V> next = current.getNext();
+            NodeHash<V,K> prev = current.getPrevious();
+            NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
         }
