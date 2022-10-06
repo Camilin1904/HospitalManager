@@ -15,6 +15,10 @@ public class TestStack extends TestCase{
 
     public void setupEscenario2(){
         stack2 = new ImpStack<>();
+
+        stack2.push("Pedro");
+        stack2.push("Martha");
+        stack2.push("Roberto");
     }
 
     public void testPoll1(){
@@ -63,6 +67,59 @@ public class TestStack extends TestCase{
             assertEquals(stack1.size(),1);
             assertEquals(stack1.poll().intValue(),3);
             assertEquals(stack1.size(),0);
+        } catch (NoSuchFieldException exception){
+            System.out.println(exception.getMessage());
+        }
+
+    }
+
+    public void testPoll2(){
+        try{
+            setupEscenario2();
+            assertEquals(stack2.poll(), "Roberto");
+            assertEquals(stack2.poll(), "Martha");
+            assertEquals(stack2.poll(),"Pedro");
+        } catch (NoSuchFieldException exception){
+            System.out.println(exception.getMessage());
+            fail();
+        }
+
+    }
+    
+    public void testExeption2(){
+        try{
+            setupEscenario2();
+            assertEquals(stack2.poll(), "Roberto");
+            assertEquals(stack2.poll(), "Martha");
+            assertEquals(stack2.poll(),"Pedro");
+            assertEquals(stack2.poll(), "");
+            fail();
+        } catch (NoSuchFieldException exception){
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    public void testClear2(){
+        try{
+            setupEscenario2();
+            stack2.clear();
+            assertEquals(stack2.poll(), "Pedro");
+            fail();
+        } catch (NoSuchFieldException exception){
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    public void testSize2(){
+        try{
+            setupEscenario2();
+            assertEquals(stack2.size(),3);
+            assertEquals(stack2.poll(), "Roberto");
+            assertEquals(stack2.size(),2);
+            assertEquals(stack2.poll(), "Martha");
+            assertEquals(stack2.size(),1);
+            assertEquals(stack2.poll(),"Pedro");
+            assertEquals(stack2.size(),0);
         } catch (NoSuchFieldException exception){
             System.out.println(exception.getMessage());
         }
