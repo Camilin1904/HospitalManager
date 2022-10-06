@@ -37,8 +37,16 @@ public class TestHash extends TestCase{
 
     public void testDelete(){
         setupEscenario1();
-        tabla1.delete("juan4");
-        assertEquals(tabla1.search("juan4").intValue(), 5445);
+        System.out.println(tabla1.search("juan4"));
+        System.out.println(tabla1.delete("juan4"));
+        try{
+            assertEquals(tabla1.search("juan4").intValue(), 5445);
+            fail();
+        }
+        catch (NullPointerException e){
+            
+        }
+        
     }
     
 

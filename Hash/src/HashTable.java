@@ -5,5 +5,5 @@ public interface HashTable <T, K> {
 
     public T search(K key);
 
-    public void delete(K key);
+    public boolean delete(K key);
 }

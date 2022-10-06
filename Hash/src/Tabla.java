@@ -45,6 +45,7 @@ public class Tabla<V,K> implements HashTable<V,K>{
     public V search(K key){
         int keyy=key.hashCode();
         keyy%=n;
+        System.out.println(keyy);
         NodeHash<V,K> u = search(key,arr[keyy],keyy);
         if (u!=null)return (u.getValue());
         else return null;
@@ -72,33 +73,50 @@ public class Tabla<V,K> implements HashTable<V,K>{
         return null;
     }
 
-    public void delete(K key) {
+    public boolean delete(K key) {
         int keyy=hashCode();
-        keyy%=10;
-        delete(arr[keyy], key,arr[keyy]);
-        s--;
+        keyy%=n;
+        //return delete(arr[keyy], key,arr[keyy]);
+        System.out.println(search(key));
+        System.out.println(keyy);
+        NodeHash<V,K> u = search(key,arr[keyy],keyy);
+        System.out.println(u);
+        if (u!=null){
+            NodeHash<V,K> a = u.getPrevious();
+            System.out.println(a.getValue());
+            if(a.equals(u)){
+                arr[keyy] = null;
+            }
+            u.getNext().setPrevious(a);
+            a.setNext(u.getNext()); 
+            s--; 
+            return true;
+        }
+        else return false;
     }
 
     //Eliminar un nodo por su ID
-    public void delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
+    public boolean delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
         if (goal == head.getKey()) {
             NodeHash<V,K> prev = current.getPrevious();
             NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
             head = next;
+            return true;
         }
         if(current.getKey() == goal){
             NodeHash<V,K> prev = current.getPrevious();
             NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
+            return true;
         }
         if(current.getNext() == head){
-            return;
+            return false;
         }
 
-        delete(current.getNext(), goal,head);
+        return delete(current.getNext(), goal,head);
 
 
     }
