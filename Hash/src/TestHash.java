@@ -5,28 +5,44 @@ public class TestHash extends TestCase{
     private Tabla<String, String> tabla2;
 
     public void setupEscenario1(){
-        tabla1 = new Tabla<>();
+        tabla1 = new Tabla<>(3);
         tabla1.insert("juan", 1212);
         tabla1.insert("juan2", 9077);
         tabla1.insert("juan3", 124254);
+        tabla1.insert("juan4", 5445);
     }
-/*
+
     public void setupEscenario2(){
-        stack2 = new ImpStack<>();
+        //stack2 = new ImpStack<>();
     }
 
-    public void test1(){
-        try{
+    public void testSearch1(){
             setupEscenario1();
-            assertEquals(tabla1.search("juan").intValue(), 8989);
-            assertEquals(stack1.poll().intValue(), 8008135);
-            assertEquals(stack1.poll().intValue(),3);
-        } catch (NoSuchFieldException exception){
-            System.out.println(exception.getMessage());
-            fail();
-        }
-
+            assertEquals(tabla1.search("juan").intValue(), 1212);
+            assertEquals(tabla1.search("juan2").intValue(), 9077);
+            assertEquals(tabla1.search("juan3").intValue(),124254);
+            assertEquals(tabla1.search("juan4").intValue(), 5445);
     }
+    
+    public void testAddSameKey(){
+        setupEscenario1();
+        tabla1.insert("juan4", 45234);
+        assertEquals(tabla1.search("juan4").intValue(), 45234);
+    }
+
+    public void testTablesize(){
+        setupEscenario1();
+        assertEquals(tabla1.size(), 4);
+    }
+
+    public void testDelete(){
+        setupEscenario1();
+        tabla1.delete("juan4");
+        assertEquals(tabla1.search("juan4").intValue(), 5445);
+    }
+    
+
+    /*
     public void testExeption1(){
         try{
             setupEscenario1();

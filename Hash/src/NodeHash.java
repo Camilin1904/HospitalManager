@@ -41,4 +41,7 @@ public class NodeHash<V,K> {
     public void setPrevious(NodeHash<V,K> previous) {
         this.previous = previous;
     }
+    public void setValue(V value) {
+        this.value = value;
+    }
 }

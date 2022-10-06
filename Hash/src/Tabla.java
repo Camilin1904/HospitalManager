@@ -3,17 +3,25 @@ import java.security.Key;
 @SuppressWarnings("unchecked")
 public class Tabla<V,K> implements HashTable<V,K>{
     private NodeHash<V,K>[] arr;
-
-    public Tabla() {
-        arr= new NodeHash[10];
+    private int n = 0;
+    private int s = 0;
+    public Tabla(int n) {
+        this.n = n;
+        arr= new NodeHash[n];
     }
 
     public void insert(K key, V value){
 
         int keyy=key.hashCode();
-        keyy%=10;
+        keyy%=n;
         NodeHash<V,K> add= new NodeHash<>(key,value);
-        addLast(add,keyy);
+        if (search(key)==null){
+            addLast(add,keyy);
+        }
+        else{
+            search(key,arr[keyy],keyy).setValue(value);
+        }
+        
     }
 
     public void addLast(NodeHash<V,K> input, int i){
@@ -31,11 +39,12 @@ public class Tabla<V,K> implements HashTable<V,K>{
             arr[i].setPrevious(input);
             input.setPrevious(tail);
         }
+        s++;
     }
 
     public V search(K key){
         int keyy=key.hashCode();
-        keyy%=10;
+        keyy%=n;
         NodeHash<V,K> u = search(key,arr[keyy],keyy);
         if (u!=null)return (u.getValue());
         else return null;
@@ -67,6 +76,7 @@ public class Tabla<V,K> implements HashTable<V,K>{
         int keyy=hashCode();
         keyy%=10;
         delete(arr[keyy], key,arr[keyy]);
+        s--;
     }
 
     //Eliminar un nodo por su ID
@@ -92,4 +102,8 @@ public class Tabla<V,K> implements HashTable<V,K>{
 
 
     }
+    public int size(){
+        return s;
+    }
+    
 }

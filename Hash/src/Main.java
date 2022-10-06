@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Tabla<Integer, String> a= new Tabla<>();
+        Tabla<Integer, String> a= new Tabla<>(10);
         a.insert("marcos",123);
         a.insert("lena",124);
         a.insert("mateo",125);
