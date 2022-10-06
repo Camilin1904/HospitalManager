@@ -1,10 +1,10 @@
-public class Node<V> {
+public class NodeHash<V> {
     private int key;
     private V value;
-    private Node next;
-    private Node previous;
+    private NodeHash<V> next;
+    private NodeHash<V> previous;
 
-    public Node(int key, V phoneNumber){
+    public NodeHash(int key, V phoneNumber){
         this.key=key;
 
         this.value=phoneNumber;
@@ -26,19 +26,19 @@ public class Node<V> {
         this.value = phoneNumber;
     }
 
-    public Node getNext() {
+    public NodeHash<V> getNext() {
         return next;
     }
 
-    public void setNext(Node next) {
+    public void setNext(NodeHash<V> next) {
         this.next = next;
     }
 
-    public Node getPrevious() {
+    public NodeHash<V> getPrevious() {
         return previous;
     }
 
-    public void setPrevious(Node previous) {
+    public void setPrevious(NodeHash<V> previous) {
         this.previous = previous;
     }
 }

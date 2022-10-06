@@ -1,3 +1,5 @@
+
+
 public class Node <T> {
     Node<T> next;
     Node<T> last;

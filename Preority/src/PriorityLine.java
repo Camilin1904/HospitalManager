@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class PriorityLine<T> implements Heap<T>{
-    private ArrayList<Node<T>> PreorityQ;
+    private ArrayList<NodePriority<T>> PreorityQ;
     private int n;
 
     public PriorityLine() {
@@ -12,7 +12,7 @@ public class PriorityLine<T> implements Heap<T>{
     public void heapSort(){
         buildMaxHeap();
         for(int i=PreorityQ.size()-1; i>=0; i--){
-            Node<T> swap= PreorityQ.get(0);
+            NodePriority<T> swap= PreorityQ.get(0);
             /*
             arr[0]=arr[i];
             arr[i]=swap;
@@ -51,7 +51,7 @@ public class PriorityLine<T> implements Heap<T>{
             PreorityQ[i] = PreorityQ[largest];
             PreorityQ[largest] = swap;
             */
-            Node<T> swap= PreorityQ.get(i);
+            NodePriority<T> swap= PreorityQ.get(i);
             PreorityQ.set(i,PreorityQ.get(largest));
             PreorityQ.set(largest,swap);
             heapify(largest);
@@ -94,7 +94,7 @@ public class PriorityLine<T> implements Heap<T>{
 
 
         while(i>0 && PreorityQ.get(i/2).getPreority()<PreorityQ.get(i).getPreority()){
-            Node<T> swap=PreorityQ.get(i);
+            NodePriority<T> swap=PreorityQ.get(i);
             //PreorityQ[i]=PreorityQ[i/2];
             PreorityQ.set(i,PreorityQ.get(i/2));
             PreorityQ.set(i/2, swap);
@@ -106,7 +106,7 @@ public class PriorityLine<T> implements Heap<T>{
     public void Insert(T element, int key){
         n++;
         //ProrityQ.add(Integer.MAX_VALUE);
-        Node<T> node= new Node(Integer.MIN_VALUE,element);
+        NodePriority<T> node= new NodePriority<>(Integer.MIN_VALUE,element);
         PreorityQ.add(node);
         increaseKey(n-1,key);
     }

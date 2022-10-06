@@ -1,8 +1,8 @@
 public class Tabla<V> {
-    private Node[] arr;
+    private NodeHash<V>[] arr;
 
     public Tabla() {
-        arr= new Node[10];
+        arr= new NodeHash[10];
     }
 
     public void insert(String key, V value){
@@ -13,17 +13,17 @@ public class Tabla<V> {
         }
         int j=keyy;
         keyy%=10;
-        Node add= new Node(j,value);
+        NodeHash<V> add= new NodeHash<>(j,value);
         addLast(add,keyy);
     }
 
-    public void addLast(Node input, int i){
+    public void addLast(NodeHash<V> input, int i){
         if(arr[i] == null){
             arr[i] = input;
             arr[i].setNext(input);
             arr[i].setPrevious(input);
         }else{
-            Node tail = arr[i].getPrevious();
+            NodeHash<V> tail = arr[i].getPrevious();
             //Los enlaces next
             tail.setNext(input);
             input.setNext(arr[i]);
@@ -34,7 +34,7 @@ public class Tabla<V> {
         }
     }
 
-    public Node search(String key){
+    public NodeHash<V> search(String key){
         int keyy=0;
         for(int i=0; i<key.length(); i++){
             keyy+=((int)key.charAt(i))*(i+1);
@@ -45,7 +45,7 @@ public class Tabla<V> {
         return search(j,arr[keyy],keyy);
     }
 
-    private Node search(int key,Node a,int first){
+    private NodeHash<V> search(int key,NodeHash<V> a,int first){
 
 
         if(a==null){
@@ -78,17 +78,17 @@ public class Tabla<V> {
     }
 
     //Eliminar un nodo por su ID
-    public void delete(Node current, int goal,Node head) {
+    public void delete(NodeHash<V> current, int goal,NodeHash<V> head) {
         if (goal == head.getKey()) {
-            Node prev = current.getPrevious();
-            Node next = current.getNext();
+            NodeHash<V> prev = current.getPrevious();
+            NodeHash<V> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
             head = next;
         }
         if(current.getKey() == goal){
-            Node prev = current.getPrevious();
-            Node next = current.getNext();
+            NodeHash<V> prev = current.getPrevious();
+            NodeHash<V> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
         }

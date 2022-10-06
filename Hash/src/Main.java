@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Tabla a= new Tabla();
+        Tabla<Integer> a= new Tabla<>();
         a.insert("marcos",123);
         a.insert("lena",124);
         a.insert("mateo",125);
@@ -49,11 +49,11 @@ public class Main {
         a.insert("lacoste",123);
         a.insert("mariana",124);
         a.insert("micasa",133);
-        Node en=a.search("gomez");
+        NodeHash<Integer> en=a.search("gomez");
         System.out.println(en==null? "No existe": en.getValue());
         a.delete("gomez");
         System.out.println("--------------");
-        Node in=a.search("gomez");
+        NodeHash<Integer> in=a.search("gomez");
         System.out.println(in==null? "No existe": in.getValue());
     }
 }

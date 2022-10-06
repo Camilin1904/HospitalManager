@@ -1,8 +1,8 @@
-public class Node<T>{
+public class NodePriority<T>{
     private int Preority;
     private T element;
 
-    public Node(int preority, T element) {
+    public NodePriority(int preority, T element) {
         Preority = preority;
         this.element = element;
     }
