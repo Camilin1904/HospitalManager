@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\camic\\OneDrive\\Documentos\\Apo_2\\Clase\\APO2\\Pruebas\\lib\\junit-4.13.2.jar"
+    ]
+}

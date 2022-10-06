@@ -27,7 +27,7 @@ public class ImpStack<T> implements Stack<T>{
 
     public T poll() throws NoSuchFieldException{
         if (head==null){
-            throw new NoSuchFieldException();
+            throw new NoSuchFieldException("Empty Stack");
         }
         else{
             T hold = head.getValue();
