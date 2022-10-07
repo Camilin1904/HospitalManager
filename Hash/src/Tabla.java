@@ -1,5 +1,3 @@
-import java.security.Key;
-
 @SuppressWarnings("unchecked")
 public class Tabla<V,K> implements HashTable<V,K>{
     private NodeHash<V,K>[] arr;
@@ -10,10 +8,15 @@ public class Tabla<V,K> implements HashTable<V,K>{
         arr= new NodeHash[n];
     }
 
+    private int generateHashCode(K key){
+        return Math.abs(key.hashCode())%n;
+    }
+
     public void insert(K key, V value){
 
-        int keyy=key.hashCode();
+        int keyy=Math.abs(key.hashCode());
         keyy%=n;
+        if(key.equals("gomez")) System.out.println(keyy);
         NodeHash<V,K> add= new NodeHash<>(key,value);
         if (search(key)==null){
             addLast(add,keyy);
@@ -43,12 +46,15 @@ public class Tabla<V,K> implements HashTable<V,K>{
     }
 
     public V search(K key){
-        int keyy=key.hashCode();
-        keyy%=n;
-        System.out.println(keyy);
+        int keyy=generateHashCode(key);
         NodeHash<V,K> u = search(key,arr[keyy],keyy);
         if (u!=null)return (u.getValue());
         else return null;
+    }
+    private NodeHash<V,K> search2(K key){
+        int keyy=generateHashCode(key);
+        NodeHash<V,K> u = search(key,arr[keyy],keyy);
+        return (u);
     }
 
     private NodeHash<V,K> search(K key,NodeHash<V,K> a,int first){
@@ -74,21 +80,21 @@ public class Tabla<V,K> implements HashTable<V,K>{
     }
 
     public boolean delete(K key) {
-        int keyy=hashCode();
-        keyy%=n;
-        //return delete(arr[keyy], key,arr[keyy]);
-        System.out.println(search(key));
+        int keyy=generateHashCode(key);
         System.out.println(keyy);
-        NodeHash<V,K> u = search(key,arr[keyy],keyy);
-        System.out.println(u);
+        //return delete(arr[keyy], key,arr[keyy]);
+        NodeHash<V,K> u = search2(key);
         if (u!=null){
             NodeHash<V,K> a = u.getPrevious();
-            System.out.println(a.getValue());
             if(a.equals(u)){
                 arr[keyy] = null;
             }
             u.getNext().setPrevious(a);
-            a.setNext(u.getNext()); 
+            a.setNext(u.getNext());
+            if ( arr[keyy]==u){
+                arr[keyy] = a; 
+            }
+            u = null;
             s--; 
             return true;
         }
@@ -96,19 +102,19 @@ public class Tabla<V,K> implements HashTable<V,K>{
     }
 
     //Eliminar un nodo por su ID
-    public void delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
+    public boolean delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
 
         if(head==null){
-            return;
+            return false;
         }
 
         if(head.getNext()==head){
             head=null;
-            return;
+            return true;
         }
         
         if(current.getNext() == head){
-            return;
+            return false;
         }
 
         if (goal == head.getKey()) {
@@ -117,7 +123,7 @@ public class Tabla<V,K> implements HashTable<V,K>{
             prev.setNext(next);
             next.setPrevious(prev);
             head = next;
-            return;
+            return true;
         }
 
         if(current.getKey() == goal){
@@ -125,11 +131,11 @@ public class Tabla<V,K> implements HashTable<V,K>{
             NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
-            return;
+            return true;
         }
         
 
-         delete(current.getNext(), goal,head);
+         return delete(current.getNext(), goal,head);
 
 
     }
