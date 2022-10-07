@@ -96,27 +96,40 @@ public class Tabla<V,K> implements HashTable<V,K>{
     }
 
     //Eliminar un nodo por su ID
-    public boolean delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
+    public void delete(NodeHash<V,K> current, K goal,NodeHash<V,K> head) {
+
+        if(head==null){
+            return;
+        }
+
+        if(head.getNext()==head){
+            head=null;
+            return;
+        }
+        
+        if(current.getNext() == head){
+            return;
+        }
+
         if (goal == head.getKey()) {
             NodeHash<V,K> prev = current.getPrevious();
             NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
             head = next;
-            return true;
+            return;
         }
+
         if(current.getKey() == goal){
             NodeHash<V,K> prev = current.getPrevious();
             NodeHash<V,K> next = current.getNext();
             prev.setNext(next);
             next.setPrevious(prev);
-            return true;
+            return;
         }
-        if(current.getNext() == head){
-            return false;
-        }
+        
 
-        return delete(current.getNext(), goal,head);
+         delete(current.getNext(), goal,head);
 
 
     }
