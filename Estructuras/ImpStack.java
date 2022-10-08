@@ -1,3 +1,5 @@
+import src.model.Stack;
+
 public class ImpStack<T> implements Stack<T>{
     
     private Node<T> head = null;

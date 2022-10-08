@@ -1,5 +1,7 @@
+import src.model.HashTable;
+
 @SuppressWarnings("unchecked")
-public class Tabla<V,K> implements HashTable<V,K>{
+public class Tabla<V,K> implements HashTable<NodeHash<V,K>, V, K>{
     private NodeHash<V,K>[] arr;
     private int n = 0;
     private int s = 0;
