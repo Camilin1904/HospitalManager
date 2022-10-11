@@ -2,31 +2,31 @@ package src.model;
 import java.util.ArrayList;
 
 public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
-    private ArrayList<Node<K,V>> PreorityQ;
+    private ArrayList<Node<K,V>> priorityQ;
     private int n;
 
     public PriorityLine() {
-        this.PreorityQ= new ArrayList<>();
-        this.n= PreorityQ.size();
+        this.priorityQ= new ArrayList<>();
+        this.n= priorityQ.size();
     }
 
     public void heapSort(){
         buildMaxHeap();
-        for(int i=PreorityQ.size()-1; i>=0; i--){
-            Node<K,V> swap= PreorityQ.get(0);
+        for(int i=priorityQ.size()-1; i>=0; i--){
+            Node<K,V> swap= priorityQ.get(0);
             /*
             arr[0]=arr[i];
             arr[i]=swap;
              */
-            PreorityQ.set(0,PreorityQ.get(i));
-            PreorityQ.set(i,swap);
+            priorityQ.set(0,priorityQ.get(i));
+            priorityQ.set(i,swap);
             n--;
             heapify(0);
         }
     }
 
     public void buildMaxHeap(){
-        for(int i=((PreorityQ.size()/2)-1); i>=0; i--){
+        for(int i=((priorityQ.size()/2)-1); i>=0; i--){
             heapify(i);
         }
     }
@@ -38,23 +38,23 @@ public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
         int r = 2 * i + 2;
 
 
-        if (l < n && PreorityQ.get(l).getPriority() > PreorityQ.get(largest).getPriority())
+        if (l < n && priorityQ.get(l).getPriority() > priorityQ.get(largest).getPriority())
             largest = l;
 
 
-        if (r < n && PreorityQ.get(r).getPriority() > PreorityQ.get(largest).getPriority())
+        if (r < n && priorityQ.get(r).getPriority() > priorityQ.get(largest).getPriority())
             largest = r;
 
 
         if (largest != i) {
             /*
-            int swap = PreorityQ[i];
-            PreorityQ[i] = PreorityQ[largest];
-            PreorityQ[largest] = swap;
+            int swap = priorityQ[i];
+            priorityQ[i] = priorityQ[largest];
+            priorityQ[largest] = swap;
             */
-            Node<K,V> swap= PreorityQ.get(i);
-            PreorityQ.set(i,PreorityQ.get(largest));
-            PreorityQ.set(largest,swap);
+            Node<K,V> swap= priorityQ.get(i);
+            priorityQ.set(i,priorityQ.get(largest));
+            priorityQ.set(largest,swap);
             heapify(largest);
         }
     }
@@ -62,7 +62,7 @@ public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
         if(n<1){
             return null;
         }
-            return PreorityQ.get(0).getValue();
+            return priorityQ.get(0).getValue();
 
 
     }
@@ -71,9 +71,9 @@ public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
             System.out.println("Cola vacia");
             return null;
         }
-        K max=PreorityQ.get(0).getValue();
+        K max=priorityQ.get(0).getValue();
 
-        PreorityQ.set(0,PreorityQ.get(n-1));
+        priorityQ.set(0,priorityQ.get(n-1));
         if(n==0){
 
         }else{
@@ -85,21 +85,21 @@ public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
     }
 
     public void increaseKey(int i,int key){
-        if(PreorityQ.get(i).getPriority()>key){
+        if(priorityQ.get(i).getPriority()>key){
             return;
         }
 
-        //PreorityQ[i]=key;
-        //PreorityQ.set(i,key);
-        PreorityQ.get(i).setPriority(key);
+        //priorityQ[i]=key;
+        //priorityQ.set(i,key);
+        priorityQ.get(i).setPriority(key);
 
 
-        while(i>0 && PreorityQ.get(i/2).getPriority()<PreorityQ.get(i).getPriority()){
-            Node<K,V> swap=PreorityQ.get(i);
-            //PreorityQ[i]=PreorityQ[i/2];
-            PreorityQ.set(i,PreorityQ.get(i/2));
-            PreorityQ.set(i/2, swap);
-            //PreorityQ[i/2]=swap;
+        while(i>0 && priorityQ.get(i/2).getPriority()<priorityQ.get(i).getPriority()){
+            Node<K,V> swap=priorityQ.get(i);
+            //priorityQ[i]=priorityQ[i/2];
+            priorityQ.set(i,priorityQ.get(i/2));
+            priorityQ.set(i/2, swap);
+            //priorityQ[i/2]=swap;
             i=i/2;
         }
     }
@@ -109,7 +109,7 @@ public class PriorityLine<K,V> implements PriorityQueue<K>, Heap<K> {
         V nose=null;
         //ProrityQ.add(Integer.MAX_VALUE);
         Node<K,V> node= new Node<>(element,nose,Integer.MIN_VALUE);
-        PreorityQ.add(node);
+        priorityQ.add(node);
         increaseKey(n-1,key);
     }
     
