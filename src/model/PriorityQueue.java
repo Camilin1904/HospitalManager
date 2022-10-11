@@ -1,10 +1,10 @@
 package src.model;
 
-public interface PriorityQueue<T>{
+public interface PriorityQueue<T, V>{
 
-    public T heapMaximum();
+    public V heapMaximum();
 
-    public T heapExtractMax();
+    public V heapExtractMax();
 
     public void increaseKey(int i, int key);
 
