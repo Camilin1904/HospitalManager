@@ -55,7 +55,7 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
         if (u!=null)return (u.getValue());
         else return null;
     }
-    private Node<Patient,String> search2(String key){
+    public Node<Patient,String> search2(String key){
         int keyy=generateHashCode(key);
         Node<Patient,String> u = search(key,table[keyy],keyy);
         return (u);

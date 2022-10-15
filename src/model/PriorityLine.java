@@ -48,9 +48,9 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
 
         if (largest != i) {
             /*
-            int swap = PreorityQ[i];
-            PreorityQ[i] = PreorityQ[largest];
-            PreorityQ[largest] = swap;
+            int swap = priorityQ[i];
+            priorityQ[i] = priorityQ[largest];
+            priorityQ[largest] = swap;
             */
             Node<T,K> swap= PriorityQ.get(i);
             PriorityQ.set(i,PriorityQ.get(largest));
