@@ -1,5 +1,7 @@
 package src.model;
 
+import java.util.ArrayList;
+
 
 public class Patient{
     private String name;
@@ -7,15 +9,15 @@ public class Patient{
     private String id;
     private String gender;
     private int age;
-    private Ailment ailment;
+    private ArrayList<Ailment> ailments;
 
-    public Patient(String name, String surname, String id, String gender, int age, Ailment ailment){
+    public Patient(String name, String surname, String id, String gender, int age, ArrayList<Ailment> ailments){
         this.age = age;
         this.name = name;
         this.gender = gender;
         this.id = id;
         this.surname = surname;
-        this.ailment = ailment;
+        this.ailments = ailments;
     }
     public int getAge() {
         return age;
@@ -47,10 +49,13 @@ public class Patient{
     public void setSurName(String surName) {
         this.surname = surName;
     }
-    public Ailment getAilment() {
-        return ailment;
+    public ArrayList<Ailment> getAilments() {
+        return ailments;
     }
-    public void setAilment(Ailment ailment) {
-        this.ailment = ailment;
+    public void setAilments(ArrayList<Ailment>  ailments) {
+        this.ailments = ailments;
+    }
+    public void addAilments(Ailment ailment){
+        ailments.add(ailment);
     }
 }
