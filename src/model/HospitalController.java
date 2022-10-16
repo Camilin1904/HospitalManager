@@ -1,10 +1,26 @@
 package src.model;
 
+import java.util.NoSuchElementException;
+
+import src.exceptions.*;
+
+@SuppressWarnings("unchecked")
 public class HospitalController {
 
     private IdTable patientDB;
-    private PriorityLine<Patient, String> patientLine;
+    private IdTable lab;
+    private PriorityLine<Patient, String>[] patientLine;
     private NodeBackup undo;
+    private String path;
+
+    public HospitalController(String path) throws NoSuchPathException{
+        lab = new IdTable(50);
+        patientDB = new IdTable(500);
+        patientLine = new PriorityLine[3];
+        for (int i=0; i<3; i++) patientLine[i] = new PriorityLine<>(i+1);
+        this.path = path;
+        if(!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
+    }
     
 
     public boolean registerPatient(String name, String surname, String id, String gender, int age){
@@ -17,7 +33,7 @@ public class HospitalController {
         return false;
     }
 
-    public void addToQueue(String patientId){
+    public void addToQueue(String patientId, int unit) throws NoSuchElementException{
 
         Node<Patient, String> toAdd = patientDB.search2(patientId);
 
@@ -47,10 +63,14 @@ public class HospitalController {
     public void dispathPatient(){
 
     }
-    
-    /*public void addPatient(Node patient){
 
-    }*/
+    public void unqueuePatient(String patientId){
+
+    }
+    
+    public void addPatientToLab(String patientId){
+
+    }
 
 
 }
