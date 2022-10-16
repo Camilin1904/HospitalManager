@@ -4,10 +4,12 @@ import java.util.ArrayList;
 public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
     private ArrayList<Node<T,K>> PriorityQ;
     private int n;
+    private int unit;
 
-    public PriorityLine() {
+    public PriorityLine(int unit) {
         this.PriorityQ= new ArrayList<>();
         this.n= PriorityQ.size();
+        this.unit = unit;
     }
 
     public void heapSort(){
@@ -112,5 +114,9 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
         element.setPriority(key);
         PriorityQ.add(element);
         increaseKey(n-1,key);
+    }
+
+    public int getUnit() {
+        return unit;
     }
 }

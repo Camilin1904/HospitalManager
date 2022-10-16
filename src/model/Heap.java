@@ -7,8 +7,4 @@ public interface Heap<V> {
     public void buildMaxHeap();
 
     public void heapSort();
-    
-    
-
-
 }
