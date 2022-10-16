@@ -22,7 +22,7 @@ public class HospitalController {
         if(!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
     }
     
-
+//Database module, By: Santiago
     public boolean registerPatient(String name, String surname, String id, String gender, int age){
 
         return false;
@@ -33,6 +33,12 @@ public class HospitalController {
         return false;
     }
 
+    public void uptadeDataBase(){
+
+    }
+
+    
+//Queues module, By: Mateo
     public void addToQueue(String patientId, int unit) throws NoSuchElementException{
 
         Node<Patient, String> toAdd = patientDB.search2(patientId);
@@ -40,19 +46,24 @@ public class HospitalController {
         
     }
 
-    public void uptadeDataBase(){
+    public void unqueuePatient(String patientId, int unit){
 
     }
-    
-    public boolean unDo(){
-
-        return false;
-    }
-
-    public String displayQueue(){
+    public String displayQueue(int unit){
 
 
         return null;
+    }
+
+    
+    
+//Lab module, By: Camilo    
+    public void addPatientToLab(String patientId){
+
+    }
+
+    public void dispathPatient(){
+
     }
 
     public String displayPeopleInFacility(){
@@ -60,16 +71,11 @@ public class HospitalController {
         return null;
     }
 
-    public void dispathPatient(){
 
-    }
+//Stack module, By: Camilo
+    public boolean unDo(){
 
-    public void unqueuePatient(String patientId){
-
-    }
-    
-    public void addPatientToLab(String patientId){
-
+        return false;
     }
 
 
