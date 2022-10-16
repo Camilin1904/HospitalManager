@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public interface HashTable <N, T, K> {
     public void insert(K key, T value);

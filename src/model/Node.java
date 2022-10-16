@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public class Node <T,K> {
     private Node<T,K> next;

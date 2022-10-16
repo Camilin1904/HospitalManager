@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public class NodeBackup implements  Stack<Node<BackUp,String>>{
     

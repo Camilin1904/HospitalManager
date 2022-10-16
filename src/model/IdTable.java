@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 @SuppressWarnings("unchecked")
 public class IdTable implements HashTable<Node<Patient, String>, Patient, String>{

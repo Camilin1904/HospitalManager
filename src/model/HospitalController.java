@@ -1,8 +1,10 @@
-package src.model;
+package model;
 
+import model.*;
+import exceptions.*;
+
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
-
-import src.exceptions.*;
 
 @SuppressWarnings("unchecked")
 public class HospitalController {
@@ -23,9 +25,10 @@ public class HospitalController {
     }
     
 //Database module, By: Santiago
-    public boolean registerPatient(String name, String surname, String id, String gender, int age){
+    public void registerPatient(String name, String surname, String id, String gender, int age, ArrayList<Ailment> ailment) throws PatientAlreadyRegisteredException{
 
-        return false;
+        patientDB.insert(id, new Patient(name,surname,id,gender,age,ailment));
+
     }
 
     public boolean loadDataBase(){
@@ -39,7 +42,7 @@ public class HospitalController {
 
     
 //Queues module, By: Mateo
-    public void addToQueue(String patientId, int unit) throws NoSuchElementException{
+    public void addToQueue(String patientId, int unit) throws NoSuchElementException {
 
         Node<Patient, String> toAdd = patientDB.search2(patientId);
 
