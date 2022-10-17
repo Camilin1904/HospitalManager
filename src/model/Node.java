@@ -5,12 +5,6 @@ public class Node <T,K> {
     private Node<T, K> last;
     private K key;
     private T value;
-    private int priority;
-    public Node(T value, K key, int priority){
-        this.value = value;
-        this.key = key;
-        this.priority = priority;
-    }
     public Node(T value, K key){
         this.value = value;
         this.key = key;
@@ -36,10 +30,7 @@ public class Node <T,K> {
     public void setValue(T value) {
         this.value = value;
     }
-    public int getPriority() {
-        return priority;
-    }
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setKey(K key) {
+        this.key = key;
     }
 }

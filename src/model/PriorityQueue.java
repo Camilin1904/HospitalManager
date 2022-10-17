@@ -1,10 +1,10 @@
 package model;
 
-public interface PriorityQueue<T, V>{
+public interface PriorityQueue<T>{
 
-    public V heapMaximum();
+    public T heapMaximum();
 
-    public V heapExtractMax();
+    public T heapExtractMax();
 
     public void increaseKey(int i, int key);
 

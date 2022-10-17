@@ -11,17 +11,17 @@ import com.google.gson.Gson;
 @SuppressWarnings("unchecked")
 public class HospitalController {
 
-    private IdTable patientDB;
-    private IdTable lab;
-    private PriorityLine<Patient, String>[] patientLine;
-    private NodeBackup undo;
+    private IdTable<Patient,String> patientDB;
+    private IdTable<Patient,String>  lab;
+    private PriorityLine<Patient>[] patientLine;
+    private NodeBackup<BackUp,String> undo;
     private String path;
     private Gson gson;
     private ArrayList<Patient> patients = new ArrayList<>();
 
     public HospitalController(String path) throws NoSuchPathException {
-        lab = new IdTable(50);
-        patientDB = new IdTable(500);
+        lab = new IdTable<>(50);
+        patientDB = new IdTable<>(500);
         patientLine = new PriorityLine[3];
         for (int i = 0; i < 3; i++) patientLine[i] = new PriorityLine<>(i + 1);
         this.path = path;
@@ -155,21 +155,21 @@ public class HospitalController {
         if(toAdd==null){
             throw new NoSuchElementException("PACIENTE NO ENCONTARDO");
         }
-        undo.push(new Node<BackUp,String>(new BackUp(patientLine[unit-1].clone()), "jijijaja"));
-        patientLine[unit-1].insert(toAdd, toAdd.getValue().getAilmentPriority());
+        undo.push(new BackUp(patientLine[unit-1].clone()));
+        patientLine[unit-1].insert(toAdd.getValue(), toAdd.getValue().getAilmentPriority());
 
         
     }
 
     public void unqueuePatient(int unit){
-        undo.push(new Node<BackUp,String>(new BackUp(patientLine[unit-1].clone()), "jijijaja"));
+        undo.push(new BackUp(patientLine[unit-1].clone()));
         patientLine[unit-1].heapExtractMax();
     }
 
 
     public String displayQueue(int unit){
         String out="";
-        PriorityLine<Patient,String> arr= patientLine[unit-1].clone();
+        PriorityLine<Patient> arr= patientLine[unit-1].clone();
         int heapSize= arr.getHeapSize();
         while(heapSize!=0){
             out+=arr.heapExtractMax().getName();
@@ -191,7 +191,7 @@ public class HospitalController {
         Patient toAdd = patientDB.search(patientId);
         if(toAdd==null) throw new NoSuchElementException("The specified patient does not exist in the database.");//The insertion is cancelled if the patient does not exist
         else{
-            undo.push(new Node<>(new BackUp(lab.clone()), patientId));//takes the snapshot of the lab table before the patient is added
+            undo.push(new BackUp(lab.clone()));//takes the snapshot of the lab table before the patient is added
             lab.insert(patientId, toAdd);
         } 
     }
@@ -214,9 +214,9 @@ public class HospitalController {
         BackUp b = new BackUp(lab.clone());
 
         for (i=0; i<3; i++){
-            if(patientLine[i].takeOut(lab.search2(patientId)))b.setUnit(patientLine[i]);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
+            if(patientLine[i].takeOut(lab.search2(patientId).getValue())) b.setUnit(patientLine[i]);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
         }
-        undo.push(new Node<>(b, patientId));//adds a new backup
+        undo.push(b);//adds a new backup
         lab.delete(patientId);//tekes the patient out of the lab 
 
     }
@@ -262,7 +262,7 @@ public class HospitalController {
      */
     public String unDo(){
         try{
-            BackUp bUp = undo.poll().getValue();//gets the backup
+            BackUp bUp = undo.poll();//gets the backup
 
             if(bUp.getUnit()!=null) patientLine[bUp.getUnit().getUnit()-1] = bUp.getUnit();//checks if there were any changes to the lines, as there cannot be changes to more than one lien at a time, that is all that he bakup saves.
     

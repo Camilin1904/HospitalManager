@@ -1,23 +1,23 @@
 package model;
 
 public class BackUp {
-    private PriorityLine<Patient,String> unit;
-    private IdTable lab;
+    private PriorityLine<Patient> unit;
+    private IdTable<Patient,String> lab;
 
-    public BackUp(PriorityLine<Patient,String> unit){
+    public BackUp(PriorityLine<Patient> unit){
         this.unit = unit;
     }
-    public BackUp(IdTable lab){
+    public BackUp(IdTable<Patient,String>  lab){
         this.lab = lab;
     }    
 
-    public IdTable getLab() {
+    public IdTable<Patient,String>  getLab() {
         return lab;
     }
-    public PriorityLine<Patient, String> getUnit() {
+    public PriorityLine<Patient> getUnit() {
         return unit;
     }
-    public void setUnit(PriorityLine<Patient, String> unit) {
+    public void setUnit(PriorityLine<Patient> unit) {
         this.unit = unit;
     }
 

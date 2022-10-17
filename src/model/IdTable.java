@@ -3,24 +3,23 @@ package model;
 import java.util.Iterator;
 
 @SuppressWarnings("unchecked")
-public class IdTable implements HashTable<Node<Patient, String>, Patient, String>, Iterable<Patient>, Cloneable{
-
-    private Node<Patient,String>[] table;
+public class IdTable<T,K> implements HashTable<Node<T, K>, T, K>, Iterable<T>, Cloneable{
+    private Node<T,K>[] table;
     private int arraySize;
     private int actualSize;
     public IdTable(int arraySize) {
         this.arraySize = arraySize;
-        table = (Node<Patient,String>[]) new Object[arraySize];
+        table = new Node[arraySize];
     }
 
-    private int generateHashCode(String key){
+    private int generateHashCode(K key){
         return Math.abs(key.hashCode())%arraySize;
     }
 
     @Override
-    public void insert(String key, Patient value) {
+    public void insert(K key, T value) {
         int keyy=generateHashCode(key);
-        Node<Patient,String> add= new Node<Patient,String>(value, key);
+        Node<T,K> add= new Node<T,K>(value, key);
         if (search(key)==null){
             addLast(add,keyy);
         }
@@ -31,13 +30,13 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
     }
 
     @Override
-    public void addLast(Node<Patient, String> input, int i) {
+    public void addLast(Node<T, K> input, int i) {
         if(table[i] == null){
             table[i] = input;
             table[i].setNext(input);
             table[i].setLast(input);
         }else{
-            Node<Patient,String> tail = table[i].getLast();
+            Node<T,K> tail = table[i].getLast();
             //Los enlaces next
             tail.setNext(input);
             input.setNext(table[i]);
@@ -51,19 +50,19 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
     }
 
     @Override
-    public Patient search(String key) {
+    public T search(K key) {
         int keyy=generateHashCode(key);
-        Node<Patient,String> u = search(key,table[keyy],keyy);
+        Node<T,K> u = search(key,table[keyy],keyy);
         if (u!=null)return (u.getValue());
         else return null;
     }
-    public Node<Patient,String> search2(String key){
+    public Node<T,K> search2(K key){
         int keyy=generateHashCode(key);
-        Node<Patient,String> u = search(key,table[keyy],keyy);
+        Node<T,K> u = search(key,table[keyy],keyy);
         return (u);
     }
 
-    private Node<Patient,String> search(String key,Node<Patient,String> actual,int first){
+    private Node<T,K> search(K key,Node<T,K> actual,int first){
 
 
         if(actual==null){
@@ -85,12 +84,12 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
         return null;
     }
     @Override
-    public boolean delete(String key) {
+    public boolean delete(K key) {
         int keyy=generateHashCode(key);
         System.out.println(keyy);
-        Node<Patient,String> toDelete = search2(key);
+        Node<T,K> toDelete = search2(key);
         if (toDelete!=null){
-            Node<Patient,String> toReplace = toDelete.getLast();
+            Node<T,K> toReplace = toDelete.getLast();
             if(toReplace.equals(toDelete)){
                 table[keyy] = null;
             }
@@ -111,19 +110,19 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
         return actualSize;
     }
 
-    protected Node<Patient,String>[] internalArray(){
+    protected Node<T,K>[] internalArray(){
         return table;
     }
 
     @Override
-    public Iterator<Patient> iterator() {
-        return new TableIterator(this);
+    public Iterator<T> iterator() {
+        return new TableIterator<T,K>(this);
     }
     @Override
-    public IdTable clone(){
-        IdTable u = null;
+    public IdTable<T,K> clone(){
+        IdTable<T,K> u = null;
         try{
-            u = (IdTable) super.clone();
+            u = (IdTable<T,K>) super.clone();
         }
         catch (CloneNotSupportedException e){
             System.out.println("tf");
@@ -133,11 +132,11 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
     
 }
 
-class TableIterator implements Iterator<Patient>{
-    Node<Patient,String> pointer;
+class TableIterator<I,C> implements Iterator<I>{
+    Node<I,C> pointer;
     int pos;
-    Node<Patient,String>[] table;
-    TableIterator(IdTable table){
+    Node<I,C>[] table;
+    TableIterator(IdTable<I,C> table){
         pos = 0;
         this.table = table.internalArray();
         pointer = this.table[pos];
@@ -149,8 +148,8 @@ class TableIterator implements Iterator<Patient>{
     }
 
     @Override
-    public Patient next() {
-        Patient current = pointer.getValue();
+    public I next() {
+        I current = pointer.getValue();
         if (pointer!=null){
             pointer = pointer.getNext();
         }
