@@ -5,6 +5,12 @@ import exceptions.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.*;
 import java.util.*;
 import com.google.gson.Gson;
 
@@ -26,6 +32,10 @@ public class HospitalController {
         for (int i = 0; i < 3; i++) patientLine[i] = new PriorityLine<>(i + 1);
         this.path = path;
         if (!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
+        else {
+            AutoUnqueuer unQ = new AutoUnqueuer();
+            unQ.unQueueAuto(this);
+        }
     }
 
     //Database module, By: Santiago
@@ -166,6 +176,10 @@ public class HospitalController {
         patientLine[unit-1].heapExtractMax();
     }
 
+    public void autoUnqueuePatient(int unit){
+        patientLine[unit-1].heapExtractMax();
+    }
+
 
     public String displayQueue(int unit){
         String out="";
@@ -278,3 +292,22 @@ public class HospitalController {
 
 
 }
+
+class AutoUnqueuer {
+    private final ScheduledExecutorService scheduler =
+      Executors.newScheduledThreadPool(1);
+ 
+    public void unQueueAuto(HospitalController hosp) {
+      final Runnable unqueuer = new Runnable() {
+        public void run() { hosp.autoUnqueuePatient(1); 
+            hosp.autoUnqueuePatient(2);
+            hosp.autoUnqueuePatient(3);        
+        }
+      };
+      final ScheduledFuture<?> beeperHandle =
+        scheduler.scheduleAtFixedRate(unqueuer, 120, 120, SECONDS);
+      scheduler.schedule(new Runnable() {
+        public void run() { beeperHandle.cancel(true); }
+      }, 60 * 60, TimeUnit.MINUTES);
+    }
+  }
