@@ -155,20 +155,21 @@ public class HospitalController {
         if(toAdd==null){
             throw new NoSuchElementException("PACIENTE NO ENCONTARDO");
         }
-        
+        undo.push(new Node<BackUp,String>(new BackUp(patientLine[unit-1].clone()), "jijijaja"));
         patientLine[unit-1].insert(toAdd, toAdd.getValue().getAilmentPriority());
 
         
     }
 
     public void unqueuePatient(int unit){
+        undo.push(new Node<BackUp,String>(new BackUp(patientLine[unit-1].clone()), "jijijaja"));
         patientLine[unit-1].heapExtractMax();
     }
 
 
     public String displayQueue(int unit){
         String out="";
-        PriorityLine<Patient,String> arr= patientLine[unit-1];
+        PriorityLine<Patient,String> arr= patientLine[unit-1].clone();
         int heapSize= arr.getHeapSize();
         while(heapSize!=0){
             out+=arr.heapExtractMax().getName();

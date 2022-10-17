@@ -1,7 +1,8 @@
 package model;
 import java.util.ArrayList;
 
-public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
+@SuppressWarnings("unchecked")
+public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T>, Cloneable {
     private ArrayList<Node<T,K>> PriorityQ;
     private int n;
     private int unit;
@@ -126,5 +127,18 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
 
     public int getHeapSize(){
         return n;
+    }
+
+    @Override
+    protected PriorityLine<T,K> clone(){
+        try{
+            PriorityLine<T,K> toClone = (PriorityLine<T,K>) super.clone();
+            return toClone;
+        }
+        catch (CloneNotSupportedException e){
+            System.out.println("tf");
+            return null;
+        }
+        
     }
 }
