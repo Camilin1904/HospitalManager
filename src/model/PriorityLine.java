@@ -119,4 +119,8 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
     public int getUnit() {
         return unit;
     }
+
+    public boolean takeOut(Node<T,K> value){
+        return PriorityQ.remove(value);
+    }
 }

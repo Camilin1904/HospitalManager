@@ -1,7 +1,9 @@
 package src.model;
 
+import java.util.Iterator;
+
 @SuppressWarnings("unchecked")
-public class IdTable implements HashTable<Node<Patient, String>, Patient, String>{
+public class IdTable implements HashTable<Node<Patient, String>, Patient, String>, Iterable<Patient>, Cloneable{
 
     private Node<Patient,String>[] table;
     private int arraySize;
@@ -108,5 +110,54 @@ public class IdTable implements HashTable<Node<Patient, String>, Patient, String
     public int size() {
         return actualSize;
     }
+
+    protected Node<Patient,String>[] internalArray(){
+        return table;
+    }
+
+    @Override
+    public Iterator<Patient> iterator() {
+        return new TableIterator(this);
+    }
+    @Override
+    public IdTable clone(){
+        IdTable u = null;
+        try{
+            u = (IdTable) super.clone();
+        }
+        catch (CloneNotSupportedException e){
+            System.out.println("tf");
+        }
+        return u;
+    }
     
+}
+
+class TableIterator implements Iterator<Patient>{
+    Node<Patient,String> pointer;
+    int pos;
+    Node<Patient,String>[] table;
+    TableIterator(IdTable table){
+        pos = 0;
+        this.table = table.internalArray();
+        pointer = this.table[pos];
+    }
+
+    @Override
+    public boolean hasNext() {
+        return pointer!=null;
+    }
+
+    @Override
+    public Patient next() {
+        Patient current = pointer.getValue();
+        if (pointer!=null){
+            pointer = pointer.getNext();
+        }
+        while(pos<table.length&&pointer==null){
+            pos++;
+            pointer = table[pos];
+        }
+        return current;
+    }
 }

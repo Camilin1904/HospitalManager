@@ -58,4 +58,17 @@ public class Patient{
     public void addAilments(Ailment ailment){
         ailments.add(ailment);
     }
+    private String ailmentsString(){
+        String a = "";
+        for (Ailment al : ailments){
+            a += al + ", ";
+        }
+        a = a.substring(0, a.length()-3);
+        return a;
+    }
+    
+    @Override
+    public String toString() {
+        return "Id: " + id + "\nName: " + name + " " + surname + "\nAge: " + age + "\nGender: " + gender + "\nAilments: " + ailmentsString();
+    }
 }
