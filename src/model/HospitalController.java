@@ -160,10 +160,10 @@ public class HospitalController {
     //Queues module, By: Mateo
     public void addToQueue(String patientId, int unit) throws NoSuchElementException {
 
-        Node<Patient, String> toAdd = patientDB.search2(patientId);
+        Node<Patient, String> toAdd = lab.search2(patientId);
         
         if(toAdd==null){
-            throw new NoSuchElementException("PACIENTE NO ENCONTARDO");
+            throw new NoSuchElementException("PACIENTE FUERA DEL LABORATORIO");
         }
         undo.push(new BackUp(patientLine[unit-1].clone()));
         patientLine[unit-1].insert(toAdd.getValue(), toAdd.getValue().getAilmentPriority());
@@ -200,10 +200,11 @@ public class HospitalController {
      * @param patientId Is the id of the patient that is to be added.
      * @throws NoSuchElementException This exception is trown in case of a non existent patient being inputed.
      */
-    public void addPatientToLab(String patientId) throws NoSuchElementException{
+    public void addPatientToLab(String patientId) throws NoSuchElementException, PatientAlreadyRegisteredException{
 
         Patient toAdd = patientDB.search(patientId);
         if(toAdd==null) throw new NoSuchElementException("The specified patient does not exist in the database.");//The insertion is cancelled if the patient does not exist
+        else if(lab.search(patientId)!=null) throw new PatientAlreadyRegisteredException("Paceinete ya registrado");
         else{
             undo.push(new BackUp(lab.clone()));//takes the snapshot of the lab table before the patient is added
             lab.insert(patientId, toAdd);
