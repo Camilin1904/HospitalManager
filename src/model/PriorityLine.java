@@ -123,4 +123,8 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {
     public boolean takeOut(Node<T,K> value){
         return PriorityQ.remove(value);
     }
+
+    public int getHeapSize(){
+        return n;
+    }
 }

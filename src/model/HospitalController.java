@@ -150,17 +150,31 @@ public class HospitalController {
     //Queues module, By: Mateo
     public void addToQueue(String patientId, int unit) throws NoSuchElementException {
 
+        Node<Patient, String> toAdd = patientDB.search2(patientId);
+        
+        if(toAdd==null){
+            throw new NoSuchElementException("PACIENTE NO ENCONTARDO");
+        }
+        
+        patientLine[unit-1].insert(toAdd, toAdd.getValue().getAilmentPriority());
 
+        
     }
 
-    public void unqueuePatient(String patientId, int unit) {
-
+    public void unqueuePatient(int unit){
+        patientLine[unit-1].heapExtractMax();
     }
 
-    public String displayQueue(int unit) {
 
-
-        return null;
+    public String displayQueue(int unit){
+        String out="";
+        PriorityLine<Patient,String> arr= patientLine[unit-1];
+        int heapSize= arr.getHeapSize();
+        while(heapSize!=0){
+            out+=arr.heapExtractMax().getName();
+            heapSize--;
+        }
+        return out;
     }
 
     
