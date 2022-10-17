@@ -26,8 +26,8 @@ public class HospitalController {
     private ArrayList<Patient> patients = new ArrayList<>();
 
     public HospitalController(String path) throws NoSuchPathException {
-        lab = new IdTable<>(50);
-        patientDB = new IdTable<>(500);
+        lab = new IdTable<>(51);
+        patientDB = new IdTable<>(501);
         patientLine = new PriorityLine[3];
         for (int i = 0; i < 3; i++) patientLine[i] = new PriorityLine<>(i + 1);
         this.path = path;
