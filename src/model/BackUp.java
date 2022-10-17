@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public class BackUp {
     private PriorityLine<Patient,String> unit;

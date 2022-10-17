@@ -1,4 +1,4 @@
-package src.exceptions;
+package exceptions;
 
 public class NoSuchPathException extends RuntimeException{
     public NoSuchPathException(String message){

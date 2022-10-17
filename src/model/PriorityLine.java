@@ -1,4 +1,4 @@
-package src.model;
+package model;
 import java.util.ArrayList;
 
 public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>, T>, Heap<T> {

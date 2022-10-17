@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,7 @@ public class Patient{
     private String gender;
     private int age;
     private ArrayList<Ailment> ailments;
+    private int ailmentPriority;
 
     public Patient(String name, String surname, String id, String gender, int age, ArrayList<Ailment> ailments){
         this.age = age;
@@ -18,6 +19,49 @@ public class Patient{
         this.id = id;
         this.surname = surname;
         this.ailments = ailments;
+
+        int prio = 0;
+        //AQUI CALCULAMOS LA PRIORIDAD QUE VA A TENER EL PACIENTE SIEMPRE A PARTIR DE SUS COMPLICACIONES
+        for(Ailment a : ailments){
+            switch (a){
+                case CANCER -> {
+                    prio += 10;
+                }
+
+                case IMMUNE_VULNERABILITY -> {
+                    prio += 9;
+                }
+
+                case HEART_RISK -> {
+                    prio += 8;
+                }
+
+                case PREGNANT -> {
+                    prio += 7;
+                }
+
+                case POST_SURGERY -> {
+                    prio += 6;
+                }
+
+                case PHYSICAL_DISABILITY -> {
+                    prio += 5;
+                }
+
+                case FEVER -> {
+                    prio += 4;
+                }
+
+                case DIARRHEA -> {
+                    prio += 3;
+                }
+
+                case PAIN -> {
+                    prio += 2;
+                }
+            }
+        }
+        ailmentPriority = prio;
     }
     public int getAge() {
         return age;
@@ -57,6 +101,12 @@ public class Patient{
     }
     public void addAilments(Ailment ailment){
         ailments.add(ailment);
+    }
+    public int getAilmentPriority() {
+        return ailmentPriority;
+    }
+    public void setAilmentPriority(int ailmentPriority) {
+        this.ailmentPriority = ailmentPriority;
     }
     private String ailmentsString(){
         String a = "";

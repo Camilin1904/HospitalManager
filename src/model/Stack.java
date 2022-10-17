@@ -1,4 +1,4 @@
-package src.model;
+package model;
 public interface Stack <T>{
     public void push(T object);
     public T peek();

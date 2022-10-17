@@ -1,4 +1,4 @@
-package src.model;
+package model;
 
 public interface Heap<V> {
 
