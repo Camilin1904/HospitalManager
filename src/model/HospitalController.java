@@ -5,6 +5,12 @@ import exceptions.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.*;
 import java.util.*;
 
 import com.google.gson.Gson;
@@ -21,12 +27,16 @@ public class HospitalController {
     private ArrayList<Patient> patients = new ArrayList<>();
 
     public HospitalController(String path) throws NoSuchPathException {
-        lab = new IdTable<>(50);
-        patientDB = new IdTable<>(500);
+        lab = new IdTable<>(51);
+        patientDB = new IdTable<>(501);
         patientLine = new PriorityLine[3];
         for (int i = 0; i < 3; i++) patientLine[i] = new PriorityLine<>(i + 1);
         this.path = path;
         if (!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
+        else {
+            AutoUnqueuer unQ = new AutoUnqueuer();
+            unQ.unQueueAuto(this);
+        }
     }
 
     //Database module, By: Santiago
@@ -63,41 +73,41 @@ public class HospitalController {
         for (int x : a) {
             switch (x) {
 
-                case 1 -> {
+                case 1:
                     ailments.add(Ailment.CANCER);
-                }
+                    break;
 
-                case 2 -> {
+                case 2:
                     ailments.add(Ailment.IMMUNE_VULNERABILITY);
-                }
+                    break;
 
-                case 3 -> {
+                case 3:
                     ailments.add(Ailment.HEART_RISK);
-                }
+                    break;
 
-                case 4 -> {
+                case 4:
                     ailments.add(Ailment.PREGNANT);
-                }
+                    break;
 
-                case 5 -> {
+                case 5:
                     ailments.add(Ailment.POST_SURGERY);
-                }
+                    break;
 
-                case 6 -> {
+                case 6:
                     ailments.add(Ailment.PHYSICAL_DISABILITY);
-                }
+                    break;
 
-                case 7 -> {
+                case 7:
                     ailments.add(Ailment.FEVER);
-                }
+                    break;
 
-                case 8 -> {
+                case 8:
                     ailments.add(Ailment.DIARRHEA);
-                }
+                    break;
 
-                case 9 -> {
+                case 9:
                     ailments.add(Ailment.PAIN);
-                }
+                    break;
             }
         }
         return ailments;
@@ -153,41 +163,40 @@ public class HospitalController {
                         for (int i = 5; i < info.length - 1; i++) {
 
                             switch (info[i]) {
-                                case "CANCER" -> {
+                                case "CANCER":
                                     ailments.add(Ailment.CANCER);
-                                }
+                                    break;
 
-                                case "IMMUNE_VULNERABILITY" -> {
+                                case "IMMUNE_VULNERABILITY":
                                     ailments.add(Ailment.IMMUNE_VULNERABILITY);
-                                }
+                                    break;
 
-                                case "HEART_RISK" -> {
+                                case "HEART_RISK":
                                     ailments.add(Ailment.HEART_RISK);
-                                }
+                                    break;
 
-                                case "PREGNANT" -> {
+                                case "PREGNANT":
                                     ailments.add(Ailment.PREGNANT);
-                                }
+                                    break;
 
-                                case "POST_SURGERY" -> {
+                                case "POST_SURGERY":
                                     ailments.add(Ailment.POST_SURGERY);
-                                }
+                                    break;
 
-                                case "PHYSICAL_DISABILITY" -> {
+                                case "PHYSICAL_DISABILITY":
                                     ailments.add(Ailment.PHYSICAL_DISABILITY);
-                                }
+                                    break;
 
-                                case "FEVER" -> {
+                                case "FEVER":
                                     ailments.add(Ailment.FEVER);
-                                }
+                                    break;
 
-                                case "DIARRHEA" -> {
+                                case "DIARRHEA":
                                     ailments.add(Ailment.DIARRHEA);
-                                }
-
-                                case "PAIN" -> {
+                                    break;
+                                case "PAIN":
                                     ailments.add(Ailment.PAIN);
-                                }
+                                    break;
                             }
 
                         }
@@ -216,10 +225,10 @@ public class HospitalController {
     //Queues module, By: Mateo
     public void addToQueue(String patientId, int unit) throws NoSuchElementException {
 
-        Node<Patient, String> toAdd = patientDB.search2(patientId);
-
-        if (toAdd == null) {
-            throw new NoSuchElementException("PACIENTE NO ENCONTARDO");
+        Node<Patient, String> toAdd = lab.search2(patientId);
+        
+        if(toAdd==null){
+            throw new NoSuchElementException("Patient is not inside the laboratory.");
         }
         undo.push(new BackUp(patientLine[unit - 1].clone()));
         patientLine[unit - 1].insert(toAdd.getValue(), toAdd.getValue().getAilmentPriority());
@@ -232,6 +241,9 @@ public class HospitalController {
         patientLine[unit - 1].heapExtractMax();
     }
 
+    public void autoUnqueuePatient(int unit){
+        patientLine[unit-1].heapExtractMax();
+    }
 
     public String displayQueue(int unit) {
         String out = "";
@@ -252,12 +264,12 @@ public class HospitalController {
      * @param patientId Is the id of the patient that is to be added.
      * @throws NoSuchElementException This exception is trown in case of a non-existent patient being inputed.
      */
-    public void addPatientToLab(String patientId) throws NoSuchElementException {
+    public void addPatientToLab(String patientId) throws NoSuchElementException, PatientAlreadyRegisteredException{
 
         Patient toAdd = patientDB.search(patientId);
-        if (toAdd == null)
-            throw new NoSuchElementException("The specified patient does not exist in the database.");//The insertion is cancelled if the patient does not exist
-        else {
+        if(toAdd==null) throw new NoSuchElementException("The specified patient does not exist in the database.");//The insertion is cancelled if the patient does not exist
+        else if(lab.search(patientId)!=null) throw new PatientAlreadyRegisteredException("Patient already registered");
+        else{
             undo.push(new BackUp(lab.clone()));//takes the snapshot of the lab table before the patient is added
             lab.insert(patientId, toAdd);
         }
@@ -342,3 +354,24 @@ public class HospitalController {
 
 
 }
+
+
+
+class AutoUnqueuer {
+    private final ScheduledExecutorService scheduler =
+      Executors.newScheduledThreadPool(1);
+
+    public void unQueueAuto(HospitalController hosp) {
+      final Runnable unqueuer = new Runnable() {
+        public void run() { hosp.autoUnqueuePatient(1);
+            hosp.autoUnqueuePatient(2);
+            hosp.autoUnqueuePatient(3);
+        }
+      };
+      final ScheduledFuture<?> beeperHandle =
+        scheduler.scheduleAtFixedRate(unqueuer, 120, 120, SECONDS);
+      scheduler.schedule(new Runnable() {
+        public void run() { beeperHandle.cancel(true); }
+      }, 60 * 60, TimeUnit.MINUTES);
+    }
+  }

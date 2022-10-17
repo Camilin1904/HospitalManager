@@ -4,10 +4,12 @@ import model.HospitalController;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class HospitalManager {
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 
-    private HospitalController cntrl;
-    Scanner sc = new Scanner(System.in);
+public class HospitalManager {
+    private Scanner sc = new Scanner(System.in);
+    private HospitalController ctrl;
 
     public static void main(String[] args) {
         System.out.println("Initializing....\n\n");
@@ -17,8 +19,8 @@ public class HospitalManager {
         }
     }
 
-    public HospitalManager() {
-        cntrl = new HospitalController("");
+    public HospitalManager(){
+        ctrl = new HospitalController("");
     }
 
     public int menu() {
@@ -40,10 +42,10 @@ public class HospitalManager {
         int option1;
         String ans;
         switch (option) {
-            case 1 -> {
+            case 1:
                 System.out.println("\nRegistering/Updating patient...\n");
                 registerPatient();
-            }
+                break;
 
         }
     }
@@ -69,11 +71,9 @@ public class HospitalManager {
         age = Integer.parseInt(sc.nextLine());
 
         do {
-            System.out.println("""
-                    The patient has any ailment?
-                    (1) yes.
-                    (2) no.
-                    """);
+            System.out.println("The patient has any ailment?\n" +
+                    "(1) yes.\n" +
+                    "(2) no.");
             yesNo = Integer.parseInt(sc.nextLine());
 
             if (yesNo != 2 || yesNo != 1) {
@@ -83,25 +83,68 @@ public class HospitalManager {
 
         if (yesNo == 1) {
             System.out.println("Select the one or more of the following options in this format \"x x x x\"\n");
-            System.out.println("""
-                    (1) Cancer.
-                    (2) Immune vulnerability.
-                    (3) Heart risk.
-                    (4) Pregnant.
-                    (5) Post surgery.
-                    (6) Physical disability.
-                    (7) Fever.
-                    (8) Diarrhea.
-                    (9) Pain.
-                    """);
+            System.out.println("(1) Cancer.\n" +
+                    "(2) Immune vulnerability.\n" +
+                    "(3) Heart risk.\n" +
+                    "(4) Pregnant.\n" +
+                    "(5) Post surgery.\n" +
+                    "(6) Physical disability.\n" +
+                    "(7) Fever.\n" +
+                    "(8) Diarrhea.\n" +
+                    "(9) Pain.");
             int[] a = Arrays.stream(sc.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-            cntrl.registerPatient(name, surname, id, gender, age, a);
+            ctrl.registerPatient(name, surname, id, gender, age, a);
 
         } else {
 
-            cntrl.registerPatient(name, surname, id, gender, age);
+            ctrl.registerPatient(name, surname, id, gender, age);
         }
         System.out.println("Patient registered/updated successfully.");
+    }
+
+    private void registerEntry(){
+        System.out.println("Input the id of the patient: ");
+        String id = sc.next();
+        try{
+            ctrl.addPatientToLab(id);
+            System.out.println("\nSuccesfully registered entry.\n");
+        }
+        catch(RuntimeException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void addToQueue(){
+        System.out.println("Input the id of the patient: ");
+        String id = sc.next();
+        System.out.println("Inout the unit that the patient wuold enter to (1-3)");
+        int unit = sc.nextInt();
+        try{
+            ctrl.addToQueue(id, unit);
+        } 
+        catch (NoSuchElementException e){
+            System.out.println("\n" + e.getMessage() + "\n");
+        }
+    }
+
+    private void displayFacility(){
+        System.out.println("Patients currently in the lab: \n" + ctrl.displayPeopleInFacility());
+    }
+
+    private void displayUnit(){
+        int unit = 0;
+        while(true){
+            try{
+                System.out.println("Which unit would the patient go to? (1-3)");
+                unit = sc.nextInt();
+                if(unit<1||unit>3) throw new InputMismatchException();
+                break;
+            }
+            catch(InputMismatchException e){
+                System.out.println("Input a valid unit");
+            }
+        }
+        System.out.println("The patients in unit " + unit + " are: " + ctrl.displayQueue(unit)); 
     }
 }

@@ -24,41 +24,41 @@ public class Patient{
         //AQUI CALCULAMOS LA PRIORIDAD QUE VA A TENER EL PACIENTE SIEMPRE A PARTIR DE SUS COMPLICACIONES
         for(Ailment a : ailments){
             switch (a){
-                case CANCER -> {
+                case CANCER:
                     prio += 10;
-                }
+                    break;
 
-                case IMMUNE_VULNERABILITY -> {
+                case IMMUNE_VULNERABILITY:
                     prio += 9;
-                }
+                    break;
 
-                case HEART_RISK -> {
+                case HEART_RISK:
                     prio += 8;
-                }
+                    break;
 
-                case PREGNANT -> {
+                case PREGNANT:
                     prio += 7;
-                }
+                    break;
 
-                case POST_SURGERY -> {
+                case POST_SURGERY:
                     prio += 6;
-                }
+                    break;
 
-                case PHYSICAL_DISABILITY -> {
+                case PHYSICAL_DISABILITY:
                     prio += 5;
-                }
+                    break;
 
-                case FEVER -> {
+                case FEVER:
                     prio += 4;
-                }
+                    break;
 
-                case DIARRHEA -> {
+                case DIARRHEA:
                     prio += 3;
-                }
+                    break;
 
-                case PAIN -> {
+                case PAIN:
                     prio += 2;
-                }
+                    break;
             }
         }
         ailmentPriority = prio;
