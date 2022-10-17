@@ -17,7 +17,7 @@ public class IdTable<T,K> implements HashTable<Node<T, K>, T, K>, Iterable<T>, C
     }
 
     @Override
-    public void insert(K key, T value) {
+    public void insert(K key, T value){
         int keyy=generateHashCode(key);
         Node<T,K> add= new Node<T,K>(value, key);
         if (search(key)==null){

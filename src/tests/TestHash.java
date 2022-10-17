@@ -1,3 +1,5 @@
+package tests;
+
 import model.*;
 import junit.framework.TestCase;
 

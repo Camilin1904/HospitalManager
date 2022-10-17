@@ -63,6 +63,14 @@ public class Patient{
         }
         ailmentPriority = prio;
     }
+
+    public Patient(String name, String surname, String id, String gender, int age){
+        this.age = age;
+        this.name = name;
+        this.gender = gender;
+        this.id = id;
+        this.surname = surname;
+    }
     public int getAge() {
         return age;
     }
