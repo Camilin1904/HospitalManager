@@ -24,6 +24,7 @@ public class HospitalController {
     private String path;
     private Gson gson;
     private ArrayList<Patient> patients = new ArrayList<>();
+    private AutoUnqueuer unQ;
 
     public HospitalController(String path) throws NoSuchPathException {
         lab = new IdTable<>(51);
@@ -33,7 +34,7 @@ public class HospitalController {
         this.path = path;
         if (!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
         else {
-            AutoUnqueuer unQ = new AutoUnqueuer();
+            unQ = new AutoUnqueuer();
             unQ.unQueueAuto(this);
         }
     }
@@ -297,6 +298,7 @@ public class HospitalController {
 class AutoUnqueuer {
     private final ScheduledExecutorService scheduler =
       Executors.newScheduledThreadPool(1);
+
  
     public void unQueueAuto(HospitalController hosp) {
       final Runnable unqueuer = new Runnable() {
