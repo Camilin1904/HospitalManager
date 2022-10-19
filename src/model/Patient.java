@@ -127,7 +127,7 @@ public class Patient{
     
     @Override
     public String toString() {
-        return "Id: " + id + "\nName: " + name + " " + surname + "\nAge: " + age + "\nGender: " + gender + "\nAilments: " + ailmentsString();
+        return "Id: " + id + "\nName: " + name + " " + surname + "\nAge: " + age + "\nGender: " + gender + "\nAilments: " + ailments;
     }
     
 }

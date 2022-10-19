@@ -7,20 +7,30 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+
+import static java.util.concurrent.TimeUnit.*;
+
 public class HospitalManager {
     private Scanner sc = new Scanner(System.in);
     private HospitalController ctrl;
+    private AutoUnqueuer unQ;
 
     public static void main(String[] args) {
         System.out.println("Initializing....\n\n");
         HospitalManager mng = new HospitalManager();
         while (mng.menu() != 0) {
-
         }
+        mng.ctrl.updateDataBase();
+        System.exit(0);
     }
 
     public HospitalManager(){
-        ctrl = new HospitalController("");
+        ctrl = new HospitalController();
+        unQ = new AutoUnqueuer();
+        unQ.unQueueAuto(this);
     }
 
     public int menu() {
@@ -31,23 +41,47 @@ public class HospitalManager {
                 "(3) Add a patient to the line.\n" +
                 "(4) Pass the next in line.\n" +
                 "(5) Register a patient exit.\n" +
+                "(6) Display facility.\n" +
+                "(7) Display line.\n" +
                 "(0) Exit app.");
 
         int option = Integer.parseInt(sc.nextLine());
-
+        executeMenu(option);
         return option;
     }
 
     public void executeMenu(int option) {
-        int option1;
-        String ans;
+        unQ.stop();
         switch (option) {
             case 1:
                 System.out.println("\nRegistering/Updating patient...\n");
                 registerPatient();
                 break;
-
+            case 2:
+                System.out.println("Registering entrance...\n");
+                registerEntry();
+                break;
+            case 3:
+                System.out.println("Adding to line...\n");
+                addToQueue();
+                break;
+            case 4:
+                System.out.println("Unqueueing patient...\n");
+                unqueue();
+                break;
+            case 5:
+                System.out.println("Registering exit...\n");
+                break;
+            case 6:
+                System.out.println("Displaying people in the facility...\n");
+                displayFacility();
+                break;
+            case 7:
+                System.out.println("Displaying people queueing...\n");
+                displayUnit();
+                break;
         }
+        unQ.unQueueAuto(this);
     }
 
     public void registerPatient() {
@@ -76,10 +110,10 @@ public class HospitalManager {
                     "(2) no.");
             yesNo = Integer.parseInt(sc.nextLine());
 
-            if (yesNo != 2 || yesNo != 1) {
+            if (yesNo != 2 && yesNo != 1) {
                 System.out.println("\nType a valid option.\n");
             }
-        } while (yesNo != 2 || yesNo != 1);
+        } while (yesNo != 2 && yesNo != 1);
 
         if (yesNo == 1) {
             System.out.println("Select the one or more of the following options in this format \"x x x x\"\n");
@@ -106,6 +140,8 @@ public class HospitalManager {
     private void registerEntry(){
         System.out.println("Input the id of the patient: ");
         String id = sc.next();
+        System.out.println(id);
+        sc.nextLine();
         try{
             ctrl.addPatientToLab(id);
             System.out.println("\nSuccesfully registered entry.\n");
@@ -120,6 +156,7 @@ public class HospitalManager {
         String id = sc.next();
         System.out.println("Inout the unit that the patient wuold enter to (1-3)");
         int unit = sc.nextInt();
+        sc.nextLine();
         try{
             ctrl.addToQueue(id, unit);
         } 
@@ -138,6 +175,7 @@ public class HospitalManager {
             try{
                 System.out.println("Which unit would the patient go to? (1-3)");
                 unit = sc.nextInt();
+                sc.nextLine();
                 if(unit<1||unit>3) throw new InputMismatchException();
                 break;
             }
@@ -147,4 +185,57 @@ public class HospitalManager {
         }
         System.out.println("The patients in unit " + unit + " are: " + ctrl.displayQueue(unit)); 
     }
+
+
+    private void unqueue(){
+        int unit=0;
+        while (true){
+            try{
+                System.out.println("Which unit?(1-3)");
+                unit = sc.nextInt();
+                sc.nextLine();
+                if(unit<1||unit>3) throw new InputMismatchException();
+                break;
+            }
+            catch(InputMismatchException e){
+                System.out.println("Input a valid unit");
+            }
+        }
+        ctrl.unqueuePatient(unit);
+    }
+
+    public void autoUnqueue(int u){
+        ctrl.autoUnqueuePatient(u);
+    }
 }
+class AutoUnqueuer {
+    private ScheduledFuture<?> beeperHandle;
+    private final ScheduledExecutorService scheduler =
+      Executors.newScheduledThreadPool(1);
+
+    public void unQueueAuto(HospitalManager hosp) {
+      final Runnable unqueuer = new Runnable() {
+        public void run() { 
+            int u = (int)(Math.random()*3)+1;
+            hosp.autoUnqueue(u);
+            System.out.println("Paciente pasado automaticamente");
+        }
+      };
+      beeperHandle =
+        scheduler.scheduleAtFixedRate(unqueuer, 60, 60, SECONDS);
+    }
+    public void stop(){
+        beeperHandle.cancel(true);
+    }
+
+    public void stahp(){
+        try{
+            this.wait();
+        }catch(InterruptedException e){}
+        
+    }
+
+    public void proceed(){
+        this.notify();
+    }
+  }

@@ -8,7 +8,7 @@ public interface PriorityQueue<T>{
 
     public void increaseKey(int i, int key);
 
-    public void insert(T element, int key);
+    public void insert(T element, int priority);
 
     
 } 

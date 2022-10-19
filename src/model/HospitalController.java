@@ -4,40 +4,31 @@ import exceptions.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.*;
 import java.util.*;
 
 import com.google.gson.Gson;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked","deprecated"})
 public class HospitalController {
 
     private IdTable<Patient, String> patientDB;
     private IdTable<Patient, String> lab;
-    private PriorityLine<Patient>[] patientLine;
-    private NodeBackup<BackUp, String> undo;
-    private String path;
+    private PriorityLine<Patient, String>[] patientLine;
+    private NodeBackup<Node<Patient,String>, String> undo;
     private Gson gson;
     private ArrayList<Patient> patients = new ArrayList<>();
-    private AutoUnqueuer unQ;
+    private int extraPriority;
+    private ArrayList<Patient> lab2;
 
-    public HospitalController(String path) throws NoSuchPathException {
+    public HospitalController() throws NoSuchPathException {
         lab = new IdTable<>(51);
+        lab2 = new ArrayList<>();
         patientDB = new IdTable<>(501);
         patientLine = new PriorityLine[3];
+        undo = new NodeBackup<>();
         for (int i = 0; i < 3; i++) patientLine[i] = new PriorityLine<>(i + 1);
-        this.path = path;
         if (!loadDataBase()) throw new NoSuchPathException("Base de datos no encontrada");
-        else {
-            unQ = new AutoUnqueuer();
-            unQ.unQueueAuto(this);
-        }
+        extraPriority = 0;
     }
 
     //Database module, By: Santiago
@@ -115,24 +106,31 @@ public class HospitalController {
     }
 
     public void updateDataBase() {
-
         //TRAEMOS LA INFORMACION DE TODOS LOS PACIENTES QUE TENEMOS EN EL ARRAYLIST DE PACIENTES Y LO VOLVEMOS UN JSON
+        gson = new Gson();
         String json = gson.toJson(patients);
         try {
-            FileOutputStream fos = new FileOutputStream(new File("DataBase.txt"));
+            File file = new File(".\\database\\Database.txt");
+            System.out.println(file.getAbsolutePath());
+            FileOutputStream fos = new FileOutputStream(file);
+            
+            
             //AQUI ESCRIBIRIAMOS TODOS LOS DATOS DEL JSON EN UN ARCHIVO LLAMADO DATABASE DE TIPO TXT
             fos.write(json.getBytes(StandardCharsets.UTF_8));
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
 
     public boolean loadDataBase() {
 
         //ASIGNAMOS EL ARCHIVO A UNA VARIABLE
-        File file = new File("DataBase.txt");
-
+        
+        File file = new File(".\\database\\Database.txt");
+        System.out.println(file.getAbsolutePath());
+        System.out.println(file.exists());
         //COMPROBAMOS QUE EL ARCHIVO EXISTA
         if (file.exists()) {
 
@@ -143,27 +141,35 @@ public class HospitalController {
                         new InputStreamReader(fis)
                 );
 
-                String line;
-                while ((line = reader.readLine()) != null) {
+                String line = reader.readLine();
 
+                String[] data = line!=null? line.split("}"):null;
+                System.out.println(Arrays.toString(data));
+
+                for (int e=0;e<data.length&&data[e].length()>2;e++){
                     //AQUI SE "DESARMA" EL JSON
-                    String w = line;
+                    String w = data[e];
                     w = w.replace(" [", "");
                     w = w.replace("]", "");
                     w = w.replace("\\u0027", "");
+                    w = e>0?w.substring(1,w.length()-1):w;
                     String[] info = w.split(",");
-                    String name = info[0];
-                    String surname = info[1];
-                    String id = info[2];
-                    String gender = info[3];
-                    int age = Integer.parseInt(info[4]);
+                    String name = info[0].substring(10,info[0].length()-1);
+                    String surname = info[1].substring(11,info[1].length()-1);
+                    String id = info[2].substring(6,info[2].length()-1);
+                    System.out.println(id);
+                    String gender = info[3].substring(10,info[3].length()-1);
+                    int age = Integer.parseInt(info[4].substring(6,info[4].length()));
                     ArrayList<Ailment> ailments = new ArrayList<>();
                     //EN CASO DE QUE TENGA 1 O MAS CONDICIONES, SE RECORRERA LO QUE RESTA DEL ARREGLO info Y
                     //SE AGREGARAN EN UN ARRAYLIST DE AILMENTS
+                    System.out.println(info.length );
                     if (info.length > 5) {
-                        for (int i = 5; i < info.length - 1; i++) {
-
-                            switch (info[i]) {
+                        for (int i = 5; i < info.length; i++) {
+                            System.out.println(info[i]);
+                            System.out.println(info[i].length()>12);
+                            String o = info[i].length()>12? info[i].substring(13,info[i].length()-1):"";
+                            switch (o) {
                                 case "CANCER":
                                     ailments.add(Ailment.CANCER);
                                     break;
@@ -231,29 +237,36 @@ public class HospitalController {
         if(toAdd==null){
             throw new NoSuchElementException("Patient is not inside the laboratory.");
         }
-        undo.push(new BackUp(patientLine[unit - 1].clone()));
-        patientLine[unit - 1].insert(toAdd.getValue(), toAdd.getValue().getAilmentPriority());
+        toAdd.setProcedence(unit+"");
+        undo.push(toAdd);
+        patientLine[unit - 1].insert(toAdd, toAdd.getValue().getAilmentPriority());
 
 
     }
 
     public void unqueuePatient(int unit) {
-        undo.push(new BackUp(patientLine[unit - 1].clone()));
-        patientLine[unit - 1].heapExtractMax();
+        Node<Patient,String> p = patientLine[unit - 1].heapExtractMax();
+        p.setProcedence(unit+"");
+        p.setDel(true);
+        undo.push(p);
+        
+        extraPriority = 0;
     }
 
     public void autoUnqueuePatient(int unit){
         patientLine[unit-1].heapExtractMax();
+        extraPriority++;
     }
 
     public String displayQueue(int unit) {
         String out = "";
-        PriorityLine<Patient> arr = patientLine[unit - 1].clone();
-        int heapSize = arr.getHeapSize();
-        while (heapSize != 0) {
-            out += arr.heapExtractMax().getName();
-            heapSize--;
+        ArrayList<Node<Patient,String>> arr = patientLine[unit - 1].getInternalArrayList();
+
+        for (Node<Patient,String> patient : arr) {
+            out += "\n ---------------------------------------- \n" + patient.getValue().toString() + "\n ---------------------------------------- ";
         }
+            
+
         return out;
     }
 
@@ -267,12 +280,14 @@ public class HospitalController {
      */
     public void addPatientToLab(String patientId) throws NoSuchElementException, PatientAlreadyRegisteredException{
 
-        Patient toAdd = patientDB.search(patientId);
+        Node<Patient,String> toAdd = patientDB.search2(patientId);
         if(toAdd==null) throw new NoSuchElementException("The specified patient does not exist in the database.");//The insertion is cancelled if the patient does not exist
         else if(lab.search(patientId)!=null) throw new PatientAlreadyRegisteredException("Patient already registered");
         else{
-            undo.push(new BackUp(lab.clone()));//takes the snapshot of the lab table before the patient is added
-            lab.insert(patientId, toAdd);
+            toAdd.setProcedence("lab");
+            undo.push(toAdd);//takes the snapshot of the lab table before the patient is added
+            lab.insert(toAdd);
+            lab2.add(toAdd.getValue());
         }
     }
 
@@ -290,13 +305,15 @@ public class HospitalController {
      */
     public void dispatchPatient(String patientId) {
         int i;
-        BackUp b = new BackUp(lab.clone());
-
+        String s = "";
+        Node<Patient,String> p = lab.search2(patientId);
         for (i = 0; i < 3; i++) {
-            if (patientLine[i].takeOut(lab.search2(patientId).getValue()))
-                b.setUnit(patientLine[i]);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
+            if (patientLine[i].takeOut(p.getValue()))
+                s = ""+(i+1);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
         }
-        undo.push(b);//adds a new backup
+        p.setProcedence(s+"lab");
+        p.setDel(true);
+        undo.push(p);//adds a new backup
         lab.delete(patientId);//tekes the patient out of the lab 
 
     }
@@ -308,10 +325,10 @@ public class HospitalController {
      * @return A visual representation ordered alphabetically of the patients in the facilities of the laboratory
      */
     public String displayPeopleInFacility() {
-        String patients = " ---------------------------------------- ";//Separator of patients 
+        String patients = " ---------------------------------------- \n";//Separator of patients 
 
         ArrayList<Patient> all = new ArrayList<>();//ArrayList to hold all patients in the lab
-        for (Patient pt : lab) {//Takes the patients from the table to this
+        for (Patient pt : lab2) {//Takes the patients from the table to this
             all.add(pt);
         }
 
@@ -323,7 +340,7 @@ public class HospitalController {
         });
 
         for (Patient pt : all) {//Makes the string
-            patients += pt.toString() + "\n ---------------------------------------- ";
+            patients += pt.toString() + "\n ---------------------------------------- \n";
         }
 
         return patients;
@@ -339,14 +356,36 @@ public class HospitalController {
      */
     public String unDo() {
         try {
-            BackUp bUp = undo.poll();//gets the backup
-
-            if (bUp.getUnit() != null)
-                patientLine[bUp.getUnit().getUnit() - 1] = bUp.getUnit();//checks if there were any changes to the lines, as there cannot be changes to more than one lien at a time, that is all that he bakup saves.
-
-            if (bUp.getLab() != null) lab = bUp.getLab();//checks if there were any chages to the lab's list
-
+            Node<Patient,String> bUp = undo.poll();//gets the backup
+            String s = bUp.getProcedence();
+            if(bUp.getDel()){
+                bUp.setDel(true);
+                try{
+                    int i = Integer.parseInt(s.charAt(0)+"") - 1;
+                    patientLine[i].increaseAllKeys(-1-extraPriority);//checks if there were any changes to the lines, as there cannot be changes to more than one lien at a time, that is all that he bakup saves.
+                    patientLine[i].insert(bUp, bUp.getValue().getAilmentPriority());
+                }
+                catch(NumberFormatException n){}
+    
+                if (s.length()>1) {
+                    lab.insert(bUp);//checks if there were any chages to the lab's list
+                    lab2.add(bUp.getValue());
+                }
+            }
+            else{
+                try{
+                    int i = Integer.parseInt(s.charAt(0)+"") - 1;
+                    patientLine[i].takeOut(bUp.getValue());
+                }
+                catch(NumberFormatException n){}
+    
+                if (s.length()>1) {
+                    lab.delete(bUp.getKey());//checks if there were any chages to the lab's list
+                    lab2.remove(bUp.getValue());
+                }
+            }
             return "Succesfully undid changes";//as there have to had been some changes, it is ensured that the changes were undone.
+
 
         } catch (NoSuchFieldException e) {//if there is nothing to go back to, an exception is trown
             return e.getMessage();//so it is caught, and the message is returned.
@@ -355,24 +394,3 @@ public class HospitalController {
 
 
 }
-
-
-
-class AutoUnqueuer {
-    private final ScheduledExecutorService scheduler =
-      Executors.newScheduledThreadPool(1);
-
-    public void unQueueAuto(HospitalController hosp) {
-      final Runnable unqueuer = new Runnable() {
-        public void run() { hosp.autoUnqueuePatient(1);
-            hosp.autoUnqueuePatient(2);
-            hosp.autoUnqueuePatient(3);
-        }
-      };
-      final ScheduledFuture<?> beeperHandle =
-        scheduler.scheduleAtFixedRate(unqueuer, 120, 120, SECONDS);
-      scheduler.schedule(new Runnable() {
-        public void run() { beeperHandle.cancel(true); }
-      }, 60 * 60, TimeUnit.MINUTES);
-    }
-  }

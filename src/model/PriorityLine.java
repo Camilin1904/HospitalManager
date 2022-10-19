@@ -2,8 +2,8 @@ package model;
 import java.util.ArrayList;
 
 @SuppressWarnings("unchecked")
-public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
-    private ArrayList<Node<T,Integer>> PriorityQ;
+public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>>, Heap<T>, Cloneable {
+    private ArrayList<Node<T,K>> PriorityQ;
     private int n;
     private int unit;
 
@@ -16,7 +16,7 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
     public void heapSort(){
         buildMaxHeap();
         for(int i=PriorityQ.size()-1; i>=0; i--){
-            Node<T,Integer> swap= PriorityQ.get(0);
+            Node<T,K> swap= PriorityQ.get(0);
             /*
             arr[0]=arr[i];
             arr[i]=swap;
@@ -41,11 +41,11 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
         int r = 2 * i + 2;
 
 
-        if (l < n && PriorityQ.get(l).getKey() > PriorityQ.get(largest).getKey())
+        if (l < n && PriorityQ.get(l).getPriority() > PriorityQ.get(largest).getPriority())
             largest = l;
 
 
-        if (r < n && PriorityQ.get(r).getKey() > PriorityQ.get(largest).getKey())
+        if (r < n && PriorityQ.get(r).getPriority() > PriorityQ.get(largest).getPriority())
             largest = r;
 
 
@@ -55,26 +55,25 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
             priorityQ[i] = priorityQ[largest];
             priorityQ[largest] = swap;
             */
-            Node<T,Integer> swap= PriorityQ.get(i);
+            Node<T,K> swap= PriorityQ.get(i);
             PriorityQ.set(i,PriorityQ.get(largest));
             PriorityQ.set(largest,swap);
             heapify(largest);
         }
     }
-    public T heapMaximum(){
+    public Node<T,K> heapMaximum(){
         if(n<1){
             return null;
         }
-            return PriorityQ.get(0).getValue();
+            return PriorityQ.get(0);
 
 
     }
-    public T heapExtractMax(){
+    public Node<T,K> heapExtractMax(){
         if(n<1){
-            System.out.println("Cola vacia");
             return null;
         }
-        T max=PriorityQ.get(0).getValue();
+        Node<T,K> max=PriorityQ.get(0);
 
         PriorityQ.remove(0);
         if(n!=0){
@@ -86,17 +85,17 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
     }
 
     public void increaseKey(int i,int key){
-        if(PriorityQ.get(i).getKey()>key){
+        if(PriorityQ.get(i).getPriority()>key){
             return;
         }
 
         //PreorityQ[i]=key;
         //PreorityQ.set(i,key);
-        PriorityQ.get(i).setKey(key);
+        PriorityQ.get(i).setPriority(key);
 
 
-        while(i>0 && PriorityQ.get(i/2).getKey()<PriorityQ.get(i).getKey()){
-            Node<T,Integer> swap=PriorityQ.get(i);
+        while(i>0 && PriorityQ.get(i/2).getPriority()<PriorityQ.get(i).getPriority()){
+            Node<T,K> swap=PriorityQ.get(i);
             //PreorityQ[i]=PreorityQ[i/2];
             PriorityQ.set(i,PriorityQ.get(i/2));
             PriorityQ.set(i/2, swap);
@@ -105,13 +104,14 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
         }
     }
 
-    public void insert(T element, int key){
+    public void insert(Node<T,K> element, int priority){
         n++;
         //V nose=null;
         //ProrityQ.add(Integer.MAX_VALUE);
         //Node<K,V> node= new Node<>(element,nose,Integer.MIN_VALUE);
-        PriorityQ.add(new Node<T,Integer>(element,key));
-        increaseKey(n-1,key);
+        element.setPriority(priority);
+        PriorityQ.add(element);
+        increaseKey(n-1,element.getPriority());
     }
 
     public int getUnit() {
@@ -119,8 +119,8 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
     }
 
     public boolean takeOut(T value){
-        Node<T,Integer> toRemove = null;
-        for (Node<T,Integer> n : PriorityQ){
+        Node<T,K> toRemove = null;
+        for (Node<T,K> n : PriorityQ){
             if(n.getValue().equals(value)) toRemove = n;
         }
         return PriorityQ.remove(toRemove);
@@ -131,9 +131,9 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
     }
 
     @Override
-    protected PriorityLine<T> clone(){
+    protected PriorityLine<T,K> clone(){
         try{
-            PriorityLine<T> toClone = (PriorityLine<T>) super.clone();
+            PriorityLine<T,K> toClone = (PriorityLine<T,K>) super.clone();
             return toClone;
         }
         catch (CloneNotSupportedException e){
@@ -144,8 +144,12 @@ public class PriorityLine<T> implements PriorityQueue<T>, Heap<T>, Cloneable {
     }
 
     public void increaseAllKeys(int increment){
-        for (Node<T,Integer> n : PriorityQ){
-            n.setKey(n.getKey()+increment);
+        for (Node<T,K> n : PriorityQ){
+            n.setPriority(n.getPriority()+increment);
         }
+    }
+
+    public ArrayList<Node<T,K>> getInternalArrayList(){
+        return PriorityQ;
     }
 }

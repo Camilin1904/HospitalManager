@@ -16,6 +16,15 @@ public class IdTable<T,K> implements HashTable<Node<T, K>, T, K>, Iterable<T>, C
         return Math.abs(key.hashCode())%arraySize;
     }
 
+    
+    @Override
+    public void insert(Node<T, K> node) {
+        int keyy=generateHashCode(node.getKey());
+        if (search(node.getKey())==null){
+            addLast(node,keyy);
+        }
+    }
+
     @Override
     public void insert(K key, T value){
         int keyy=generateHashCode(key);
@@ -69,15 +78,15 @@ public class IdTable<T,K> implements HashTable<Node<T, K>, T, K>, Iterable<T>, C
             return null;
         }
 
-        if(actual.getNext()==table[first] && actual.getKey()!=key){
+        if(actual.getNext()==table[first] && !actual.getKey().equals(key)){
             return null;
         }
 
-        if(actual.getKey()==key){
+        if(actual.getKey().equals(key)){
             return actual;
         }
 
-        if(actual.getKey()!=key){
+        if(!actual.getKey().equals(key)){
             return search(key,actual.getNext(),first);
         }
 

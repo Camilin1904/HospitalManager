@@ -1,0 +1,1 @@
+[{"name":"Camilin","surname":"Pinguin","id":"111","gender":"Male","age":18,"ailments":[],"ailmentPriority":0},{"name":"jijaja","surname":"jajajiji","id":"222","gender":"jajiajai","age":12,"ailments":["CANCER"],"ailmentPriority":10}]
