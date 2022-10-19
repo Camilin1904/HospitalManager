@@ -43,6 +43,7 @@ public class HospitalManager {
                 "(5) Register a patient exit.\n" +
                 "(6) Display facility.\n" +
                 "(7) Display line.\n" +
+                "(8) UnDo.\n" +
                 "(0) Exit app.");
 
         int option = Integer.parseInt(sc.nextLine());
@@ -71,6 +72,7 @@ public class HospitalManager {
                 break;
             case 5:
                 System.out.println("Registering exit...\n");
+                dispatchPatient();
                 break;
             case 6:
                 System.out.println("Displaying people in the facility...\n");
@@ -80,6 +82,13 @@ public class HospitalManager {
                 System.out.println("Displaying people queueing...\n");
                 displayUnit();
                 break;
+            case 8:
+                unDo();
+                break;
+            case 0:
+                break;
+            default:
+                System.out.println("Invalid input.");
         }
         unQ.unQueueAuto(this);
     }
@@ -154,7 +163,7 @@ public class HospitalManager {
     private void addToQueue(){
         System.out.println("Input the id of the patient: ");
         String id = sc.next();
-        System.out.println("Inout the unit that the patient wuold enter to (1-3)");
+        System.out.println("Input the unit that the patient would enter to (1-3)");
         int unit = sc.nextInt();
         sc.nextLine();
         try{
@@ -173,7 +182,7 @@ public class HospitalManager {
         int unit = 0;
         while(true){
             try{
-                System.out.println("Which unit would the patient go to? (1-3)");
+                System.out.println("Which unit will be displayed? (1-3)");
                 unit = sc.nextInt();
                 sc.nextLine();
                 if(unit<1||unit>3) throw new InputMismatchException();
@@ -207,7 +216,30 @@ public class HospitalManager {
     public void autoUnqueue(int u){
         ctrl.autoUnqueuePatient(u);
     }
+
+    public void dispatchPatient(){
+        System.out.println("Input the id of the patient: ");
+        String id = sc.next();
+        sc.nextLine();
+        try{
+            ctrl.dispatchPatient(id);
+            System.out.println("\nSuccesfully registered exit.\n");
+        }
+        catch(NullPointerException e){
+            System.out.println("No patient with that id on the lab");
+        }
+    }
+
+    public void unDo(){
+        System.out.println(ctrl.unDo());
+    }
 }
+
+
+
+
+
+
 class AutoUnqueuer {
     private ScheduledFuture<?> beeperHandle;
     private final ScheduledExecutorService scheduler =

@@ -303,19 +303,18 @@ public class HospitalController {
      *
      * @param patientId The id of the patient to be dispatched
      */
-    public void dispatchPatient(String patientId) {
-        int i;
-        String s = "";
-        Node<Patient,String> p = lab.search2(patientId);
-        for (i = 0; i < 3; i++) {
-            if (patientLine[i].takeOut(p.getValue()))
-                s = ""+(i+1);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
-        }
-        p.setProcedence(s+"lab");
-        p.setDel(true);
-        undo.push(p);//adds a new backup
-        lab.delete(patientId);//tekes the patient out of the lab 
-
+    public void dispatchPatient(String patientId) throws NullPointerException{
+            int i;
+            String s = "";
+            Node<Patient,String> p = lab.search2(patientId);
+            for (i = 0; i < 3; i++) {
+                if (patientLine[i].takeOut(p.getValue()))
+                    s = ""+(i+1);//takes the patient out of the line its in, as it can only be in one, that one line is added to the backup Stack
+            }
+            p.setProcedence(s+"lab");
+            p.setDel(true);
+            undo.push(p);//adds a new backup
+            lab.delete(patientId);//tekes the patient out of the lab 
     }
 
 

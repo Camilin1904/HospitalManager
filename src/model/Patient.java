@@ -116,15 +116,6 @@ public class Patient{
     public void setAilmentPriority(int ailmentPriority) {
         this.ailmentPriority = ailmentPriority;
     }
-    private String ailmentsString(){
-        String a = "";
-        for (Ailment al : ailments){
-            a += al + ", ";
-        }
-        a = a.substring(0, a.length()-3);
-        return a;
-    }
-    
     @Override
     public String toString() {
         return "Id: " + id + "\nName: " + name + " " + surname + "\nAge: " + age + "\nGender: " + gender + "\nAilments: " + ailments;
