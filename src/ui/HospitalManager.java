@@ -180,19 +180,20 @@ public class HospitalManager {
 
     private void displayUnit(){
         int unit = 0;
-        while(true){
+        //while(true){
             try{
                 System.out.println("Which unit will be displayed? (1-3)");
                 unit = sc.nextInt();
                 sc.nextLine();
                 if(unit<1||unit>3) throw new InputMismatchException();
-                break;
+                System.out.println("The patients in unit " + unit + " are: " + ctrl.displayQueue(unit)); 
+                //break;
             }
             catch(InputMismatchException e){
                 System.out.println("Input a valid unit");
             }
-        }
-        System.out.println("The patients in unit " + unit + " are: " + ctrl.displayQueue(unit)); 
+        //}
+        
     }
 
 
