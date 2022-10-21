@@ -260,15 +260,4 @@ class AutoUnqueuer {
     public void stop(){
         unqueueHandle.cancel(true);
     }
-
-    public void stahp(){
-        try{
-            this.wait();
-        }catch(InterruptedException e){}
-        
-    }
-
-    public void proceed(){
-        this.notify();
-    }
   }
