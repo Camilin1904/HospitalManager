@@ -43,7 +43,7 @@ public class HospitalManager {
                 "(5) Register a patient exit.\n" +
                 "(6) Display facility.\n" +
                 "(7) Display line.\n" +
-                "(8) UnDo.\n" +
+                "(8) UnD    o.\n" +
                 "(0) Exit app.");
 
         int option = Integer.parseInt(sc.nextLine());
@@ -242,7 +242,7 @@ public class HospitalManager {
 
 
 class AutoUnqueuer {
-    private ScheduledFuture<?> beeperHandle;
+    private ScheduledFuture<?> unqueueHandle;
     private final ScheduledExecutorService scheduler =
       Executors.newScheduledThreadPool(1);
 
@@ -254,11 +254,11 @@ class AutoUnqueuer {
             System.out.println("Paciente pasado automaticamente");
         }
       };
-      beeperHandle =
+      unqueueHandle =
         scheduler.scheduleAtFixedRate(unqueuer, 60, 60, SECONDS);
     }
     public void stop(){
-        beeperHandle.cancel(true);
+        unqueueHandle.cancel(true);
     }
 
     public void stahp(){
