@@ -9,6 +9,6 @@ The final version of the code is found in master.
 
 Developed by:
 
-Camilo Carmona Valencia-A00381090
-Santiago Espinosa Troncoso-A00381045
+Camilo Carmona Valencia-A00381090/
+Santiago Espinosa Troncoso-A00381045/
 Mateo Silva Lasso-A00382277
