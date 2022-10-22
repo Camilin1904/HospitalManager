@@ -214,8 +214,8 @@ public class HospitalManager {
         ctrl.unqueuePatient(unit);
     }
 
-    public void autoUnqueue(int u){
-        ctrl.autoUnqueuePatient(u);
+    public boolean autoUnqueue(int u){
+        return ctrl.autoUnqueuePatient(u);
     }
 
     public void dispatchPatient(){
@@ -250,8 +250,7 @@ class AutoUnqueuer {
       final Runnable unqueuer = new Runnable() {
         public void run() { 
             int u = (int)(Math.random()*3)+1;
-            hosp.autoUnqueue(u);
-            System.out.println("Paciente pasado automaticamente");
+            if(hosp.autoUnqueue(u)) System.out.println("Paciente pasado automaticamente");
         }
       };
       unqueueHandle =
