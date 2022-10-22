@@ -296,13 +296,6 @@ public class HospitalController {
         }
     }
 
-
-    /**
-     * Takes the patient out of the table of people inside the lab
-     * @param patientId The id of the patient to be dispatched
-     */
-
-
     /**
      * Takes the patient out of the table of people inside the lab
      *
@@ -319,7 +312,7 @@ public class HospitalController {
         p.setProcedence(s + "lab");
         p.setDel(true);
         undo.push(p);//adds a new backup
-        lab.delete(patientId);//tekes the patient out of the lab
+        lab.delete(patientId);//takes the patient out of the lab
     }
 
 
@@ -336,7 +329,7 @@ public class HospitalController {
             all.add(pt);
         }
 
-        all.sort(new Comparator<Patient>() {//Sorts the patients alphabetially
+        all.sort(new Comparator<Patient>() {//Sorts the patients alphabetically
             @Override
             public int compare(Patient o1, Patient o2) {
                 return (o1.getName() + " " + o1.getSurName()).compareTo(o2.getName() + " " + o2.getSurName());
@@ -372,7 +365,7 @@ public class HospitalController {
                 }
 
                 if (s.length() > 1) {
-                    lab.insert(bUp);//checks if there were any chages to the lab's list
+                    lab.insert(bUp);//checks if there were any changes to the lab's list
                     lab2.add(bUp.getValue());
                 }
             } else {
@@ -383,17 +376,15 @@ public class HospitalController {
                 }
 
                 if (s.length() > 1) {
-                    lab.delete(bUp.getKey());//checks if there were any chages to the lab's list
+                    lab.delete(bUp.getKey());//checks if there were any changes to the lab's list
                     lab2.remove(bUp.getValue());
                 }
             }
-            return "Succesfully undid changes";//as there have to had been some changes, it is ensured that the changes were undone.
+            return "Successfully undid changes";//as there have to had been some changes, it is ensured that the changes were undone.
 
 
-        } catch (NoSuchFieldException e) {//if there is nothing to go back to, an exception is trown
+        } catch (NoSuchFieldException e) {//if there is nothing to go back to, an exception is thrown
             return e.getMessage();//so it is caught, and the message is returned.
         }
     }
-
-
 }

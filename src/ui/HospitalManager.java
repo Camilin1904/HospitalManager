@@ -190,7 +190,7 @@ public class HospitalManager {
                 //break;
             }
             catch(InputMismatchException e){
-                System.out.println("Input a valid unit");
+                System.out.println("Input a valid unit.\n");
             }
         //}
         
@@ -208,7 +208,7 @@ public class HospitalManager {
                 break;
             }
             catch(InputMismatchException e){
-                System.out.println("Input a valid unit");
+                System.out.println("Input a valid unit.\n");
             }
         }
         ctrl.unqueuePatient(unit);
@@ -224,10 +224,10 @@ public class HospitalManager {
         sc.nextLine();
         try{
             ctrl.dispatchPatient(id);
-            System.out.println("\nSuccesfully registered exit.\n");
+            System.out.println("\nSuccessfully registered exit.\n");
         }
         catch(NullPointerException e){
-            System.out.println("No patient with that id on the lab");
+            System.out.println("No patient with that id on the lab.\n");
         }
     }
 
@@ -251,7 +251,7 @@ class AutoUnqueuer {
       final Runnable unqueuer = new Runnable() {
         public void run() { 
             int u = (int)(Math.random()*3)+1;
-            if(hosp.autoUnqueue(u)) System.out.println("Paciente pasado automaticamente");
+            if(hosp.autoUnqueue(u)) System.out.println("Patient passed successfully.\n");
         }
       };
       unqueueHandle =
