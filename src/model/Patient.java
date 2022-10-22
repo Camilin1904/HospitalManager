@@ -1,4 +1,6 @@
-package src.model;
+package model;
+
+import java.util.ArrayList;
 
 
 public class Patient{
@@ -7,15 +9,67 @@ public class Patient{
     private String id;
     private String gender;
     private int age;
-    private Ailment ailment;
+    private ArrayList<Ailment> ailments;
+    private int ailmentPriority;
 
-    public Patient(String name, String surname, String id, String gender, int age, Ailment ailment){
+    public Patient(String name, String surname, String id, String gender, int age, ArrayList<Ailment> ailments){
         this.age = age;
         this.name = name;
         this.gender = gender;
         this.id = id;
         this.surname = surname;
-        this.ailment = ailment;
+        this.ailments = ailments;
+
+        int prio = 0;
+        //AQUI CALCULAMOS LA PRIORIDAD QUE VA A TENER EL PACIENTE SIEMPRE A PARTIR DE SUS COMPLICACIONES
+        for(Ailment a : ailments){
+            switch (a){
+                case CANCER:
+                    prio += 10;
+                    break;
+
+                case IMMUNE_VULNERABILITY:
+                    prio += 9;
+                    break;
+
+                case HEART_RISK:
+                    prio += 8;
+                    break;
+
+                case PREGNANT:
+                    prio += 7;
+                    break;
+
+                case POST_SURGERY:
+                    prio += 6;
+                    break;
+
+                case PHYSICAL_DISABILITY:
+                    prio += 5;
+                    break;
+
+                case FEVER:
+                    prio += 4;
+                    break;
+
+                case DIARRHEA:
+                    prio += 3;
+                    break;
+
+                case PAIN:
+                    prio += 2;
+                    break;
+            }
+        }
+        ailmentPriority = prio;
+    }
+
+    public Patient(String name, String surname, String id, String gender, int age){
+        this.age = age;
+        this.name = name;
+        this.gender = gender;
+        this.id = id;
+        this.surname = surname;
     }
     public int getAge() {
         return age;
@@ -47,10 +101,24 @@ public class Patient{
     public void setSurName(String surName) {
         this.surname = surName;
     }
-    public Ailment getAilment() {
-        return ailment;
+    public ArrayList<Ailment> getAilments() {
+        return ailments;
     }
-    public void setAilment(Ailment ailment) {
-        this.ailment = ailment;
+    public void setAilments(ArrayList<Ailment>  ailments) {
+        this.ailments = ailments;
     }
+    public void addAilments(Ailment ailment){
+        ailments.add(ailment);
+    }
+    public int getAilmentPriority() {
+        return ailmentPriority;
+    }
+    public void setAilmentPriority(int ailmentPriority) {
+        this.ailmentPriority = ailmentPriority;
+    }
+    @Override
+    public String toString() {
+        return "Id: " + id + "\nName: " + name + " " + surname + "\nAge: " + age + "\nGender: " + gender + "\nAilments: " + ailments;
+    }
+    
 }

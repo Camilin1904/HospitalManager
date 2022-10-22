@@ -1,8 +1,8 @@
-package src.model;
+package model;
 
-public class NodeBackup implements  Stack<Node<Patient,String>>{
+public class NodeBackup<T,K> implements  Stack<T>{
     
-    private Node<Patient,String> head = null;
+    private Node<T,K> head = null;
     private int n;
     
 
@@ -12,12 +12,12 @@ public class NodeBackup implements  Stack<Node<Patient,String>>{
 
 
     @Override
-    public void push(Node<Patient, String> object) {
+    public void push(T object) {
         if (head==null){
-            head = object;
+            head = new Node<>(object, null);
         }
         else {
-            Node<Patient, String> n = object;
+            Node<T, K> n = new Node<>(object, null);
             n.setNext(head);
             head.setLast(n);
             head = n;
@@ -28,21 +28,21 @@ public class NodeBackup implements  Stack<Node<Patient,String>>{
 
 
     @Override
-    public Node<Patient, String> peek() {
-        return head;
+    public T peek() {
+        return head.getValue();
     }
 
 
     @Override
-    public Node<Patient, String> poll() throws NoSuchFieldException {
+    public T poll() throws NoSuchFieldException {
         if (head==null){
             throw new NoSuchFieldException("Empty Stack");
         }
         else{
-            Node<Patient,String> hold = head;
+            Node<T,K> hold = head;
             head = head.getNext();
             n--;
-            return hold;
+            return hold.getValue();
         }
     }
 
