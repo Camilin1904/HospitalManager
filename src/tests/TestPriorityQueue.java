@@ -5,7 +5,6 @@ import model.*;
 
 public class TestPriorityQueue extends TestCase{
     private PriorityLine<Integer,Integer> test1;
-    private PriorityLine<String, Integer> test2;
 
     
     public void testSceario1(){
@@ -18,15 +17,11 @@ public class TestPriorityQueue extends TestCase{
 
     public void testExtractMax(){
        testSceario1();
-       /* 
-       assertEquals(test1.heapExtractMax().intValue(), 1);
-       assertEquals(test1.heapExtractMax().intValue(), 2);
-       assertEquals(test1.heapExtractMax().intValue(), 4);
-       assertEquals(test1.heapExtractMax().intValue(), 6);
+       assertEquals(test1.heapExtractMax().getValue().intValue(), 3);
+       assertEquals(test1.heapExtractMax().getValue().intValue(), 1);
+       assertEquals(test1.heapExtractMax().getValue().intValue(), 2);
+       assertEquals(test1.heapExtractMax().getValue().intValue(), 4);
        assertNull(test1.heapExtractMax());
-       */
-      test1.heapExtractMax();
-      assertEquals(test1.getHeapSize(), 3);
     }
 
     public void testMaximum(){
@@ -40,16 +35,12 @@ public class TestPriorityQueue extends TestCase{
         assertEquals(test1.heapMaximum().getPriority(), 100);
     }
 
-    
-
-    /* 
     public void testTakeOut(){
-
         testSceario1();
-        assertTrue(test1.takeOut(6));
-        assertFalse(test1.takeOut(6));
+        assertTrue(test1.takeOut(4));
+        assertFalse(test1.takeOut(4));
     }
-    */
+    
     
 
 }

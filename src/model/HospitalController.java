@@ -124,94 +124,33 @@ public class HospitalController {
 
     }
 
-    public boolean loadDataBase() {
-        
-        File file = new File(".\\database\\Database.txt");
-        if (file.exists()) {
+    public boolean loadDataBase(){
+        try {
+            File file = new File(".\\database\\Database.txt");
+            FileInputStream fis = new FileInputStream(file);
 
-            try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
-                FileInputStream fis = new FileInputStream(file);
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(fis)
-                );
+            String json = "";
+            String line;
+            if((line=reader.readLine())!=null){
+                json= line;
+            }
+            fis.close();
 
-                String line = reader.readLine();
+            Gson gson = new Gson();
+            Patient[] peopleFromJson = gson.fromJson(json, Patient[].class);
 
-                String[] data = line!=null? line.split("}"):null;
-
-                for (int e=0;e<data.length&&data[e].length()>2;e++){
-
-                    String w = data[e];
-                    w = w.replace(" [", "");
-                    w = w.replace("]", "");
-                    w = w.replace("\\u0027", "");
-                    w = e > 0 ? w.substring(1, w.length() - 1) : w;
-                    String[] info = w.split(",");
-                    String name = info[0].substring(10,info[0].length()-1);
-                    String surname = info[1].substring(11,info[1].length()-1);
-                    String id = info[2].substring(6,info[2].length()-1);
-                    String gender = info[3].substring(10,info[3].length()-1);
-                    int age = Integer.parseInt(info[4].substring(6,info[4].length()));
-                    ArrayList<Ailment> ailments = new ArrayList<>();
-                    if (info.length > 5) {
-                        for (int i = 5; i < info.length; i++) {
-                            System.out.println(info[i]);
-                            System.out.println(info[i].length() > 12);
-                            String o = info[i].length() > 12 ? info[i].substring(13, info[i].length() - 1) : "";
-                            switch (o) {
-                                case "CANCER":
-                                    ailments.add(Ailment.CANCER);
-                                    break;
-
-                                case "IMMUNE_VULNERABILITY":
-                                    ailments.add(Ailment.IMMUNE_VULNERABILITY);
-                                    break;
-
-                                case "HEART_RISK":
-                                    ailments.add(Ailment.HEART_RISK);
-                                    break;
-
-                                case "PREGNANT":
-                                    ailments.add(Ailment.PREGNANT);
-                                    break;
-
-                                case "POST_SURGERY":
-                                    ailments.add(Ailment.POST_SURGERY);
-                                    break;
-
-                                case "PHYSICAL_DISABILITY":
-                                    ailments.add(Ailment.PHYSICAL_DISABILITY);
-                                    break;
-
-                                case "FEVER":
-                                    ailments.add(Ailment.FEVER);
-                                    break;
-
-                                case "DIARRHEA":
-                                    ailments.add(Ailment.DIARRHEA);
-                                    break;
-                                case "PAIN":
-                                    ailments.add(Ailment.PAIN);
-                                    break;
-                            }
-
-                        }
-                    }
-                    Patient temp = new Patient(name, surname, id, gender, age, ailments);
-                    patientDB.insert(id, temp);
-                    patients.add(temp);
-                }
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            for(Patient p : peopleFromJson){
+                patientDB.insert(p.getId(), p);
+                patients.add(p);
             }
             return true;
-        } else {
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
             return false;
         }
-
-
     }
 
     //Queues module, By: Mateo

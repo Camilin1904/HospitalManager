@@ -1,1 +1,1 @@
-[{"name":"Camilin","surname":"Pinguin","id":"111","gender":"Male","age":18,"ailments":[],"ailmentPriority":0},{"name":"a","surname":"jajajiji","id":"222","gender":"jajiajai","age":12,"ailments":["CANCER"],"ailmentPriority":10},{"name":"ateo","surname":"silva","id":"123","gender":"masculino","age":13,"ailments":["PREGNANT"],"ailmentPriority":7}]
+[{"name":"Camilin","surname":"Pinguin","id":"111","gender":"Male","age":18,"ailmentPriority":0},{"name":"Jijijaja","surname":"Jajajiji","id":"222","gender":"Jajijija","age":12,"ailments":["CANCER"],"ailmentPriority":10}]
