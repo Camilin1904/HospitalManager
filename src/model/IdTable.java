@@ -1,5 +1,5 @@
 package model;
-
+    
 @SuppressWarnings("unchecked")
 public class IdTable<T,K> implements HashTable<Node<T, K>, T, K>{
     private Node<T,K>[] table;

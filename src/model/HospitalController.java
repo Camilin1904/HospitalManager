@@ -253,9 +253,12 @@ public class HospitalController {
         extraPriority = 0;
     }
 
-    public void autoUnqueuePatient(int unit) {
-        patientLine[unit - 1].heapExtractMax();
-        extraPriority++;
+    public boolean autoUnqueuePatient(int unit){
+        if(patientLine[unit-1].heapExtractMax()!=null) {
+            extraPriority++;
+            return true;
+        }
+        else return false;
     }
 
     public String displayQueue(int unit) {
