@@ -125,13 +125,8 @@ public class HospitalController {
     }
 
     public boolean loadDataBase() {
-
-        //ASIGNAMOS EL ARCHIVO A UNA VARIABLE
         
         File file = new File(".\\database\\Database.txt");
-        System.out.println(file.getAbsolutePath());
-        System.out.println(file.exists());
-        //COMPROBAMOS QUE EL ARCHIVO EXISTA
         if (file.exists()) {
 
             try {
@@ -144,10 +139,9 @@ public class HospitalController {
                 String line = reader.readLine();
 
                 String[] data = line!=null? line.split("}"):null;
-                System.out.println(Arrays.toString(data));
 
                 for (int e=0;e<data.length&&data[e].length()>2;e++){
-                    //AQUI SE "DESARMA" EL JSON
+
                     String w = data[e];
                     w = w.replace(" [", "");
                     w = w.replace("]", "");
@@ -157,13 +151,9 @@ public class HospitalController {
                     String name = info[0].substring(10,info[0].length()-1);
                     String surname = info[1].substring(11,info[1].length()-1);
                     String id = info[2].substring(6,info[2].length()-1);
-                    System.out.println(id);
                     String gender = info[3].substring(10,info[3].length()-1);
                     int age = Integer.parseInt(info[4].substring(6,info[4].length()));
                     ArrayList<Ailment> ailments = new ArrayList<>();
-                    //EN CASO DE QUE TENGA 1 O MAS CONDICIONES, SE RECORRERA LO QUE RESTA DEL ARREGLO info Y
-                    //SE AGREGARAN EN UN ARRAYLIST DE AILMENTS
-                    System.out.println(info.length );
                     if (info.length > 5) {
                         for (int i = 5; i < info.length; i++) {
                             System.out.println(info[i]);
@@ -208,21 +198,16 @@ public class HospitalController {
 
                         }
                     }
-                    //SE CREA UN OBJETO TEMPORAL DE PACIENTE
                     Patient temp = new Patient(name, surname, id, gender, age, ailments);
-                    //AQUI SE ESTARIA AGREGANDO A LA HASHTABLE EL PACIENTE EN CUESTION
                     patientDB.insert(id, temp);
-                    //SE AGREGA EL PACIENTE AL ARRAYLIST DE PACIENTES
                     patients.add(temp);
                 }
                 fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //SI EXISTE, RETORNAMOS TRUE
             return true;
         } else {
-            //SI NO EXISTE, RETORNAMOS FALSE
             return false;
         }
 
@@ -316,6 +301,7 @@ public class HospitalController {
             }
             p.setProcedence(s+"lab");
             p.setDel(true);
+            lab2.remove(p.getValue());
             undo.push(p);//adds a new backup
             lab.delete(patientId);//tekes the patient out of the lab 
     }
@@ -329,19 +315,14 @@ public class HospitalController {
     public String displayPeopleInFacility() {
         String patients = " ---------------------------------------- \n";//Separator of patients 
 
-        ArrayList<Patient> all = new ArrayList<>();//ArrayList to hold all patients in the lab
-        for (Patient pt : lab2) {//Takes the patients from the table to this
-            all.add(pt);
-        }
-
-        all.sort(new Comparator<Patient>() {//Sorts the patients alphabetially
+        lab2.sort(new Comparator<Patient>() {//Sorts the patients alphabetially
             @Override
             public int compare(Patient o1, Patient o2) {
                 return (o1.getName() + " " + o1.getSurName()).compareTo(o2.getName() + " " + o2.getSurName());
             }
         });
 
-        for (Patient pt : all) {//Makes the string
+        for (Patient pt : lab2) {//Makes the string
             patients += pt.toString() + "\n ---------------------------------------- \n";
         }
 

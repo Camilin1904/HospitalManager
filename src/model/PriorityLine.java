@@ -104,12 +104,12 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>>, Heap<T> {
     }
 
     public void insert(Node<T,K> element, int priority){
-        n++;
         //V nose=null;
         //ProrityQ.add(Integer.MAX_VALUE);
         //Node<K,V> node= new Node<>(element,nose,Integer.MIN_VALUE);
         element.setPriority(priority);
         PriorityQ.add(element);
+        n = PriorityQ.size();
         increaseKey(n-1,element.getPriority());
     }
 
@@ -126,7 +126,7 @@ public class PriorityLine<T,K> implements PriorityQueue<Node<T,K>>, Heap<T> {
     }
 
     public int getHeapSize(){
-        return n;
+        return PriorityQ.size();
     }
 
     public void increaseAllKeys(int increment){

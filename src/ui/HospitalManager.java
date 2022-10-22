@@ -249,7 +249,7 @@ class AutoUnqueuer {
     public void unQueueAuto(HospitalManager hosp) {
       final Runnable unqueuer = new Runnable() {
         public void run() { 
-            int u = (int)(Math.random()*3)+1;
+            int u = (int)(Math.random()*3);
             if(hosp.autoUnqueue(u)) System.out.println("Paciente pasado automaticamente");
         }
       };
