@@ -43,7 +43,7 @@ public class HospitalManager {
                 "(5) Register a patient exit.\n" +
                 "(6) Display facility.\n" +
                 "(7) Display line.\n" +
-                "(8) UnD    o.\n" +
+                "(8) UnDo.\n" +
                 "(0) Exit app.");
 
         int option = Integer.parseInt(sc.nextLine());
@@ -67,7 +67,7 @@ public class HospitalManager {
                 addToQueue();
                 break;
             case 4:
-                System.out.println("Unqueueing patient...\n");
+                System.out.println("Passing patient...\n");
                 unqueue();
                 break;
             case 5:
@@ -153,7 +153,7 @@ public class HospitalManager {
         sc.nextLine();
         try{
             ctrl.addPatientToLab(id);
-            System.out.println("\nSuccesfully registered entry.\n");
+            System.out.println("\nSuccessfully registered entry.\n");
         }
         catch(RuntimeException e){
             System.out.println(e.getMessage());
@@ -163,7 +163,7 @@ public class HospitalManager {
     private void addToQueue(){
         System.out.println("Input the id of the patient: ");
         String id = sc.next();
-        System.out.println("Input the unit that the patient would enter to (1-3)");
+        System.out.println("Input the unit that the patient would enter to (1, 2 or 3)");
         int unit = sc.nextInt();
         sc.nextLine();
         try{
@@ -182,7 +182,7 @@ public class HospitalManager {
         int unit = 0;
         //while(true){
             try{
-                System.out.println("Which unit will be displayed? (1-3)");
+                System.out.println("Which unit will be displayed? (1, 2 or 3)");
                 unit = sc.nextInt();
                 sc.nextLine();
                 if(unit<1||unit>3) throw new InputMismatchException();
@@ -190,7 +190,7 @@ public class HospitalManager {
                 //break;
             }
             catch(InputMismatchException e){
-                System.out.println("Input a valid unit");
+                System.out.println("Input a valid unit.\n");
             }
         //}
         
@@ -208,7 +208,7 @@ public class HospitalManager {
                 break;
             }
             catch(InputMismatchException e){
-                System.out.println("Input a valid unit");
+                System.out.println("Input a valid unit.\n");
             }
         }
         ctrl.unqueuePatient(unit);
@@ -224,10 +224,10 @@ public class HospitalManager {
         sc.nextLine();
         try{
             ctrl.dispatchPatient(id);
-            System.out.println("\nSuccesfully registered exit.\n");
+            System.out.println("\nSuccessfully registered exit.\n");
         }
         catch(NullPointerException e){
-            System.out.println("No patient with that id on the lab");
+            System.out.println("No patient with that id on the lab.\n");
         }
     }
 
@@ -235,6 +235,7 @@ public class HospitalManager {
         System.out.println(ctrl.unDo());
     }
 }
+
 
 
 
